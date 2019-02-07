@@ -1,16 +1,16 @@
-# salon_app_new
+# Salon App
+An app developed with [<img src="https://cdn.arstechnica.net/wp-content/uploads/2018/12/7.jpg" align="center" width="100">](http://flutter.io) for a local barber shop
 
-A new Flutter project.
 
-## Getting Started
+<img src="https://im2.ezgif.com/tmp/ezgif-2-81974e01158d.gif" width="200"/>
 
-This project is a starting point for a Flutter application.
+<img src="https://i.imgur.com/xcxmKb6.jpg" width="400"/>
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.io/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.io/docs/cookbook)
-
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.io/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+# Contribution
+- Feature enhancements
+- UI/UX enhancing
+- Bug improvements
+- Code Improvements
+  
+# Architecture Followed
+- [BLOC Pattern](https://www.youtube.com/watch?v=fahC3ky_zW0)
