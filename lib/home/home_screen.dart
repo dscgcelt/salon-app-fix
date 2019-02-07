@@ -5,6 +5,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:salon_app_new/onboarding/pages/login_page.dart';
 import 'package:salon_app_new/home/dashboard.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
 class HomeScreen extends StatefulWidget {
   final FirebaseUser user;
   HomeScreen({this.user});
@@ -100,6 +102,7 @@ class HomeScreenState extends State<HomeScreen> {
             builder: (context) => MyLoginPage("Need an Appointment?",
                 "images/salon_shop.png", "We won't disappoint you")),
       );
+      Fluttertoast.showToast(msg: "Logout sucessful");
     }).catchError((e) {
       print("Logout failed");
     });
@@ -109,7 +112,7 @@ class HomeScreenState extends State<HomeScreen> {
     //handling selected Choice from apppbar actions(popupmenu button)
 
     if (choice == choices[0]) {
-      // Fluttertoast.showToast(msg: "Settings");
+       Fluttertoast.showToast(msg: "Settings");
     } else if (choice == choices[1]) {
       // Fluttertoast.showToast(msg: "Log out");
       _handleSignOut(context);

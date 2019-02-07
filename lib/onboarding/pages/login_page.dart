@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:salon_app_new/home/home_screen.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class MyLoginPage extends StatefulWidget {
   final String _subheading;
@@ -59,7 +60,7 @@ class MyLoginPageState extends State<MyLoginPage> {
     isLoggedIn = await googleSignIn.isSignedIn();
     if(isLoggedIn){
       
-      // Fluttertoast.showToast(msg: "Sign In Successfull");
+       Fluttertoast.showToast(msg: "Sign In Successfull");
 
       Navigator.pushReplacement(
         context,

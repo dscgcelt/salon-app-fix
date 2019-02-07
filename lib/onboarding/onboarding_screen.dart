@@ -5,9 +5,33 @@ import 'package:salon_app_new/onboarding/pages/login_page.dart';
 import 'package:salon_app_new/onboarding/pages/second_page.dart';
 import 'package:salon_app_new/onboarding/pages/third_page.dart';
 import 'package:page_indicator/page_indicator.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:salon_app_new/home/home_screen.dart';
 
 
-class OnBoardingApp extends StatelessWidget {
+class OnBoardingApp extends StatefulWidget {
+
+  @override
+  OnBoardingAppState createState() {
+    return new OnBoardingAppState();
+  }
+}
+
+class OnBoardingAppState extends State<OnBoardingApp> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    Future.delayed(Duration.zero,(){
+      _signinHome();
+    });
+
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
@@ -50,4 +74,31 @@ class OnBoardingApp extends StatelessWidget {
       ]),
     );
   }
+
+  GoogleSignIn googleSignIn = GoogleSignIn();
+  GoogleSignInAccount _googleSignInAccount;
+  FirebaseUser _user;
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
+  void _signinHome() async{
+    GoogleSignInAuthentication googleAuth;
+    bool isSignedIn = await googleSignIn.isSignedIn();
+    if(isSignedIn){
+      _googleSignInAccount = await googleSignIn.signIn();
+      googleAuth = await _googleSignInAccount.authentication;
+      _user = await firebaseAuth.signInWithGoogle(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      ).catchError((e)=>Fluttertoast.showToast(msg: "Sign In Failed"));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (BuildContext context) => HomeScreen(user: _user,)
+        ),
+      );
+    }else{
+      return;
+    }
+  }
+
 }
