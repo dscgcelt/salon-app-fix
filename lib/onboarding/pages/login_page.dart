@@ -63,7 +63,7 @@ class MyLoginPageState extends State<MyLoginPage> {
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context)=> HomeScreen(),)
+        MaterialPageRoute(builder: (context)=> HomeScreen(user: firebaseUser,),)
  
       );
     }

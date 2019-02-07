@@ -4,8 +4,10 @@ import 'package:salon_app_new/util/custom_colors.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:salon_app_new/onboarding/pages/login_page.dart';
-
+import 'package:salon_app_new/home/dashboard.dart';
 class HomeScreen extends StatefulWidget {
+  final FirebaseUser user;
+  HomeScreen({this.user});
   @override
   HomeScreenState createState() {
     return new HomeScreenState();
@@ -13,7 +15,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
-
   List<Choice> choices = <Choice>[
     Choice(icon: Icons.settings, title: "Setings"),
     Choice(icon: Icons.exit_to_app, title: "Log Out"),
@@ -25,6 +26,7 @@ class HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     CustomColors customColor = CustomColors();
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
           title: Text("Cut & Trim"),
@@ -58,14 +60,27 @@ class HomeScreenState extends State<HomeScreen> {
             children: <Widget>[
               Column(
                 children: <Widget>[
-                  Container(
-                    width: 1000,
-                    margin: EdgeInsets.all(10.0),
-                    child: Image.asset(
-                      "images/profile_overview.png",
-                      fit: BoxFit.fill,
-                    ),
-                  ),
+//                  Container(
+//                    width: 1000,
+//                    margin: EdgeInsets.all(10.0),
+////                    child: Image.asset(
+////                      "images/profile_overview.png",
+////                      fit: BoxFit.fill,
+////                    ),
+//                    child: Card(
+//                      color: customColor.primaryColor,
+//                      child: Container(
+//                        width: 1000,
+//                        height: 180,
+//                        child: Center(
+//                            child: Text(
+//                          "Hello, ${widget.user.displayName}",
+//                          style: TextStyle(color: Colors.white, fontSize: 30.0),
+//                        )),
+//                      ),
+//                    ),
+//                  ),
+                  DashBoard(user: widget.user,),
                   LastVisitCard(),
                   HaircutListMenu(),
                 ],
@@ -76,17 +91,20 @@ class HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-   void _handleSignOut(BuildContext context) async {
-  FirebaseAuth.instance.signOut().then((value) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) =>
-       MyLoginPage("Need an Appointment?","images/salon_shop.png","We won't disappoint you")),
-    );
-  }).catchError((e) {
-    print("Logout failed");
-  });
-}
+
+  void _handleSignOut(BuildContext context) async {
+    FirebaseAuth.instance.signOut().then((value) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => MyLoginPage("Need an Appointment?",
+                "images/salon_shop.png", "We won't disappoint you")),
+      );
+    }).catchError((e) {
+      print("Logout failed");
+    });
+  }
+
   void _handleChoiceSelect(Choice choice) {
     //handling selected Choice from apppbar actions(popupmenu button)
 
@@ -98,7 +116,9 @@ class HomeScreenState extends State<HomeScreen> {
       googleSignIn.disconnect();
     }
   }
+
 }
+
 class Choice {
   Choice({
     this.icon,
@@ -168,7 +188,7 @@ class HaircutListMenu extends StatelessWidget {
             style: TextStyle(color: customColor.primaryColor),
           ),
           Container(
-            margin: EdgeInsets.only(top: 8.0,bottom: 16.0),
+            margin: EdgeInsets.only(top: 8.0, bottom: 16.0),
             height: 200.0,
             child: ListView(
               scrollDirection: Axis.horizontal,
@@ -181,7 +201,7 @@ class HaircutListMenu extends StatelessWidget {
             style: TextStyle(color: customColor.primaryColor),
           ),
           Container(
-            margin: EdgeInsets.only(top: 8.0,bottom: 16.0),
+            margin: EdgeInsets.only(top: 8.0, bottom: 16.0),
             height: 200.0,
             child: ListView(
               scrollDirection: Axis.horizontal,
@@ -193,3 +213,5 @@ class HaircutListMenu extends StatelessWidget {
     );
   }
 }
+
+
