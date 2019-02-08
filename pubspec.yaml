@@ -18,7 +18,7 @@ dependencies:
   page_indicator:
   datetime_picker_formfield:
   google_sign_in:
-  firebase_auth:
+  firebase_auth: 0.6.2+1
   cloud_firestore: ^0.8.0
   fluttertoast:
 
