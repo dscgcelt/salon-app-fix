@@ -15,6 +15,23 @@ class _BookingState extends State<Booking> {
   final timeFormat = DateFormat("h:mm a");
   DateTime date;
   TimeOfDay time;
+    static var selectedDate = DateTime.now();
+    static var _dateFormat = DateFormat('dd-MM-yyyy');
+    String formattedDate = _dateFormat.format(selectedDate);
+
+  Future<Null> _selectDate(BuildContext context) async{
+    final DateTime picked = await showDatePicker(
+       context: context,
+       initialDate: selectedDate,
+       firstDate: DateTime(2009),
+       lastDate: DateTime(2110),
+    ); 
+    if(picked !=null && picked != selectedDate)
+    setState(() {
+     selectedDate = picked; 
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     CustomColors customColors = CustomColors();
@@ -42,12 +59,31 @@ class _BookingState extends State<Booking> {
                       width: 300,
                     )),
                 Text("Mohawk"),
-                new ListTile(
-                  leading: const Icon(Icons.calendar_today),
-                  title: new TextField(
-                    decoration: new InputDecoration(
-                      hintText: "Date",
-                    ),
+                // new ListTile(
+                //   leading: const Icon(Icons.calendar_today),
+                //   title: new TextField(
+                //     decoration: new InputDecoration(
+                //       hintText: "Date",
+                      
+                //     ),
+                //   ),
+                // ),
+                Container(
+                  padding: EdgeInsets.fromLTRB(80.0, 0.0, 20.0, 0.0),
+                  child: Row(
+                    children: <Widget>[
+                      Text("${_dateFormat.format(selectedDate)}",
+          
+                      style: TextStyle(
+                        fontSize: 20.0
+                      ),
+                      ),
+                      SizedBox(width: 30.0),
+                      FloatingActionButton(onPressed: () => _selectDate(context),
+                      child: const Icon(Icons.calendar_today) ,
+                      elevation: 8.0,
+                      ),
+                    ],
                   ),
                 ),
                 new ListTile(
