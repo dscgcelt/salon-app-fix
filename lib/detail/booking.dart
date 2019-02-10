@@ -12,12 +12,25 @@ class Booking extends StatefulWidget {
 
 class _BookingState extends State<Booking> {
   final dateFormat = DateFormat("EEEE, MMMM d, yyyy 'at' h:mma");
-  final timeFormat = DateFormat("h:mm a");
   DateTime date;
   TimeOfDay time;
     static var selectedDate = DateTime.now();
+    static var selectedDateTime = DateTime.now();
+    static var selectedTime = TimeOfDay.now();
     static var _dateFormat = DateFormat('dd-MM-yyyy');
-    String formattedDate = _dateFormat.format(selectedDate);
+    static var _timeFormat = DateFormat("h:mm a");
+
+  Future<Null> _selectTime(BuildContext context) async{
+    final TimeOfDay pickedTime = await showTimePicker(
+       context: context,
+       initialTime: selectedTime,
+       
+    );
+    if(pickedTime != null && pickedTime != selectedTime)
+    setState(() {
+      selectedTime = pickedTime;
+    });
+  }
 
   Future<Null> _selectDate(BuildContext context) async{
     final DateTime picked = await showDatePicker(
@@ -29,6 +42,7 @@ class _BookingState extends State<Booking> {
     if(picked !=null && picked != selectedDate)
     setState(() {
      selectedDate = picked; 
+     selectedDateTime = picked;
     });
   }
 
@@ -82,16 +96,37 @@ class _BookingState extends State<Booking> {
                       FloatingActionButton(onPressed: () => _selectDate(context),
                       child: const Icon(Icons.calendar_today) ,
                       elevation: 8.0,
+                      heroTag: "fab1",
                       ),
                     ],
                   ),
                 ),
-                new ListTile(
-                  leading: const Icon(Icons.access_time),
-                  title: new TextField(
-                    decoration: new InputDecoration(
-                      hintText: "Timing",
-                    ),
+                SizedBox(height: 18.0,),
+                // new ListTile(
+                //   leading: const Icon(Icons.access_time),
+                //   title: new TextField(
+                //     decoration: new InputDecoration(
+                //       hintText: "Timing",
+                //     ),
+                //   ),
+                // ),
+                Container(
+                  padding: EdgeInsets.fromLTRB(80.0, 0.0, 20.0, 0.0),
+                  child: Row(
+                    children: <Widget>[
+                      Text("${selectedTime.format(context)}",
+                      // Text("${_timeFormat.format(selectedDateTime)}",
+                      style: TextStyle(
+                        fontSize: 20.0
+                      ),
+                      ),
+                      SizedBox(width: 55.0,),
+                      FloatingActionButton(onPressed: () =>_selectTime(context),
+                        child: const Icon(Icons.access_time),
+                        elevation: 8.0,
+                        heroTag: "fab2",
+                      ),
+                    ],
                   ),
                 ),
                 new ListTile(
