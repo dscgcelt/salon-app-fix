@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:salon_app_new/detail/booking.dart';
 import 'package:salon_app_new/util/custom_colors.dart';
 
 class Catalogue extends StatelessWidget {
+  final FirebaseUser user;
+
+  Catalogue({this.user});
+
   @override
   Widget build(BuildContext context) {
     CustomColors customColors = CustomColors();
@@ -11,7 +16,7 @@ class Catalogue extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => Booking()),
+              builder: (context) => Booking(user: user)),
         );
       },
 
