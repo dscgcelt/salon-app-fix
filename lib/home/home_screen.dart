@@ -23,7 +23,6 @@ class HomeScreenState extends State<HomeScreen> {
   ];
 
   GoogleSignIn googleSignIn = GoogleSignIn();
-
   @override
   Widget build(BuildContext context) {
     CustomColors customColor = CustomColors();
@@ -65,10 +64,10 @@ class HomeScreenState extends State<HomeScreen> {
 //                  Container(
 //                    width: 1000,
 //                    margin: EdgeInsets.all(10.0),
-////                    child: Image.asset(
-////                      "images/profile_overview.png",
-////                      fit: BoxFit.fill,
-////                    ),
+//                 child: Image.asset(
+//                     "images/profile_overview.png",
+//                      fit: BoxFit.fill,
+//                    ),
 //                    child: Card(
 //                      color: customColor.primaryColor,
 //                      child: Container(
@@ -84,7 +83,7 @@ class HomeScreenState extends State<HomeScreen> {
 //                  ),
                   DashBoard(user: widget.user,),
                   LastVisitCard(),
-                  HaircutListMenu(),
+                  HaircutListMenu(user: widget.user,),
                 ],
               )
             ],
@@ -173,14 +172,19 @@ class LastVisitCard extends StatelessWidget {
 }
 
 class HaircutListMenu extends StatelessWidget {
-  final CustomColors customColor = CustomColors();
+  final FirebaseUser user;
+  
+  HaircutListMenu({this.user});
+  // final CustomColors customColor = CustomColors();
 
   @override
   Widget build(BuildContext context) {
+    CustomColors customColor = CustomColors();
     List<Widget> widgets = List<Widget>();
     for (var i = 0; i < 10; i++) {
-      widgets.add(Catalogue());
+      widgets.add(Catalogue(user: user,));
     }
+      
     return Container(
       margin: EdgeInsets.only(top: 10.0, left: 15.0),
       child: Column(

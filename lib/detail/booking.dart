@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:salon_app_new/home/home_screen.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:salon_app_new/home/catalogue.dart';
 import 'package:salon_app_new/util/custom_colors.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:datetime_picker_formfield/time_picker_formfield.dart';
 
 class Booking extends StatefulWidget {
+  final FirebaseUser user;
+  Booking({this.user});
+  
   @override
   _BookingState createState() => _BookingState();
 }
@@ -42,17 +49,19 @@ class _BookingState extends State<Booking> {
     if(picked !=null && picked != selectedDate)
     setState(() {
      selectedDate = picked; 
-     selectedDateTime = picked;
+     selectedDateTime = picked; //for emergencycase
     });
   }
 
   @override
   Widget build(BuildContext context) {
     CustomColors customColors = CustomColors();
+    CollectionReference collectionReference = Firestore.instance.collection("users");
     List<Widget> widgets = List<Widget>();
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < 9; i++) {
       widgets.add(Catalogue());
     }
+    widgets.add(Catalogue(user: widget.user,));
     return MaterialApp(
       home: Scaffold(
         resizeToAvoidBottomPadding: false,
@@ -152,7 +161,23 @@ class _BookingState extends State<Booking> {
                     children: widgets,
                   ),
                 ),
-                RaisedButton(onPressed: (){},child: Text("Pick your barber"),)
+                RaisedButton(onPressed: (){
+                  // collectionReference.document()
+                  // .setData({
+                  //   'date' : selectedDate,
+                  //   'time' : selectedTime
+                  // });
+                  collectionReference
+                  .document(widget.user.uid)
+                  .collection("bookings")
+                  .add({
+                    'date' : selectedDate,
+                    'time' : selectedTime,
+                  });
+                  Fluttertoast.showToast(msg: "Booked ${widget.user.uid}", toastLength: Toast.LENGTH_SHORT);
+                 Navigator.pop(context);
+                },
+                child: Text("Book your date"),)
               ],
             ),
           ),
