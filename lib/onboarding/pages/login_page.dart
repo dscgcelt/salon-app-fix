@@ -47,7 +47,7 @@ class MyLoginPageState extends State<MyLoginPage> {
       if (documents.length == 0) {
         Firestore.instance
             .collection('users')
-            .document(firebaseUser.uid)
+            .document(firebaseUser.email)
             .setData({
           'nickname': firebaseUser.displayName,
           'photoUrl': firebaseUser.photoUrl,
@@ -143,7 +143,7 @@ class MyLoginPageState extends State<MyLoginPage> {
           ],
         ),
               ],
-      )
+      ),
 
     ]
       

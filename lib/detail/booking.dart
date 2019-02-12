@@ -56,7 +56,7 @@ class _BookingState extends State<Booking> {
   @override
   Widget build(BuildContext context) {
     CustomColors customColors = CustomColors();
-    CollectionReference collectionReference = Firestore.instance.collection("users");
+//    CollectionReference collectionReference = Firestore.instance.collection("users");
     List<Widget> widgets = List<Widget>();
     for (var i = 0; i < 9; i++) {
       widgets.add(Catalogue());
@@ -167,12 +167,13 @@ class _BookingState extends State<Booking> {
                   //   'date' : selectedDate,
                   //   'time' : selectedTime
                   // });
-                  collectionReference
-                  .document(widget.user.uid)
-                  .collection("bookings")
-                  .add({
-                    'date' : selectedDate,
-                    'time' : selectedTime,
+
+                  Firestore.instance.collection('users').document(widget.user.email)
+                  .collection("bookings").document().
+                  setData
+                  ({
+                    'date' : selectedDate.toString(),
+                    'time' : selectedTime.toString(),
                   });
                   Fluttertoast.showToast(msg: "Booked ${widget.user.uid}", toastLength: Toast.LENGTH_SHORT);
                  Navigator.pop(context);
