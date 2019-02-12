@@ -169,7 +169,7 @@ class _BookingState extends State<Booking> {
                   // });
 
                   Firestore.instance.collection('users').document(widget.user.email)
-                  .collection("bookings").document().
+                  .collection("bookings").document(selectedDate.toIso8601String()+selectedTime.toString()).
                   setData
                   ({
                     'date' : selectedDate.toString(),
