@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:salon_app_new/onboarding/pages/login_page.dart';
 import 'package:salon_app_new/home/dashboard.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomeScreen extends StatefulWidget {
   final FirebaseUser user;
@@ -182,7 +183,7 @@ class HaircutListMenu extends StatelessWidget {
     CustomColors customColor = CustomColors();
     List<Widget> widgets = List<Widget>();
     for (var i = 0; i < 10; i++) {
-      widgets.add(Catalogue(user: user,));
+      widgets.add(Catalogue(name:"Style"));
     }
       
     return Container(
@@ -196,11 +197,33 @@ class HaircutListMenu extends StatelessWidget {
           ),
           Container(
             margin: EdgeInsets.only(top: 8.0, bottom: 16.0),
-            height: 200.0,
+            height: 223.0,
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: widgets,
             ),
+//            child: StreamBuilder(
+//              stream: Firestore.instance.collection("barbers").snapshots(),
+//              builder: (BuildContext context,snapshot){
+////                print(snapshot.data.documents[0]['photo']);
+//                if(!snapshot.hasData)
+//                {
+//                   return CircularProgressIndicator();
+//                }
+//                  return ListView.builder(
+//                    scrollDirection: Axis.horizontal,
+//                    itemBuilder: (_, int i) {
+//                      print("HI>>"+i.toString());
+//                      print(snapshot.data.documents[i]['photoUrl'].toString());
+//                      return Catalogue(name: snapshot.data.documents[i]['name'],
+//                        photoUrl: snapshot.data.documents[i]['photo'],);
+//                    },
+//                    itemCount: snapshot.data.documents.length,
+//                  );
+//
+//              }
+//
+//            ),
           ),
           Text(
             "Beard",
@@ -209,11 +232,34 @@ class HaircutListMenu extends StatelessWidget {
           ),
           Container(
             margin: EdgeInsets.only(top: 8.0, bottom: 16.0),
-            height: 200.0,
+            height: 223.0,
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: widgets,
             ),
+//            child: StreamBuilder(
+////              initialData: widgets,
+//                stream: Firestore.instance.collection("barbers").snapshots(),
+//                builder: (BuildContext context,snapshot){
+////                print(snapshot.data.documents[0]['photo']);
+//                  if(!snapshot.hasData)
+//                  {
+//                    return CircularProgressIndicator();
+//                  }
+//                  print(snapshot.data.documents.length);
+//                  return ListView.builder(
+//
+//                    scrollDirection: Axis.horizontal,
+//                    itemBuilder: (context, int i) {
+//                      print("HI>>"+i.toString());
+//                      return Catalogue(name: snapshot.data.documents[i]['name'],
+//                        photoUrl: snapshot.data.documents[i]['photo'],);
+//                    },
+//                    itemCount: snapshot.data.documents.length,
+//                  );
+//
+//                }
+//          ),
           )
         ],
       ),
