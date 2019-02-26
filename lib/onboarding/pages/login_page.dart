@@ -6,6 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:salon_app_new/onboarding/pages/signup_page.dart';
+import 'user_form.dart';
 
 class MyLoginPage extends StatefulWidget {
   final String _subheading;
@@ -45,28 +47,45 @@ class MyLoginPageState extends State<MyLoginPage> {
       final List<DocumentSnapshot> documents = result.documents;
 
       if (documents.length == 0) {
-        Firestore.instance
-            .collection('users')
-            .document(firebaseUser.uid)
-            .setData({
-          'nickname': firebaseUser.displayName,
-          'photoUrl': firebaseUser.photoUrl,
-          'id': firebaseUser.uid,
-          'gid': googleUser.id,
-        });
+        //for new user
+
+//        Firestore.instance
+//            .collection('users')
+//            .document(firebaseUser.email)
+//            .setData({
+//          'nickname': firebaseUser.displayName,
+//          'photoUrl': firebaseUser.photoUrl,
+//          'id': firebaseUser.uid,
+//          'gid': googleUser.id,
+//        });
+
+        isLoggedIn = await googleSignIn.isSignedIn();
+        if(isLoggedIn){
+
+          Fluttertoast.showToast(msg: "Sign In Successfull");
+
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context)=> UserForm(widget._backgroundImage,firebaseUser,googleUser),)
+
+          );
+        }
+      } else {
+        //already an user
+        isLoggedIn = await googleSignIn.isSignedIn();
+        if(isLoggedIn){
+
+          Fluttertoast.showToast(msg: "Sign In Successfull");
+
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context)=> HomeScreen(user: firebaseUser,),)
+
+          );
+        }
       }
     }
-    isLoggedIn = await googleSignIn.isSignedIn();
-    if(isLoggedIn){
-      
-       Fluttertoast.showToast(msg: "Sign In Successfull");
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context)=> HomeScreen(user: firebaseUser,),)
- 
-      );
-    }
   }
 
   @override
@@ -128,7 +147,12 @@ class MyLoginPageState extends State<MyLoginPage> {
                           },
                           color: Colors.green,
                         ),
-                      )
+                      ),
+                      FlatButton(onPressed:()=> Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context)=>MySignupPage(widget._backgroundImage)),
+                      ),
+                        child: Text("Don't have an account?SignUp!!!",textAlign: TextAlign.center,),textColor: Colors.black45,)
                     ],
                   ),
                 ),
@@ -143,7 +167,7 @@ class MyLoginPageState extends State<MyLoginPage> {
           ],
         ),
               ],
-      )
+      ),
 
     ]
       

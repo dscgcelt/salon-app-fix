@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:salon_app_new/home/home_screen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:salon_app_new/home/catalogue.dart';
+import 'package:salon_app_new/barber/barberCatalogue.dart';
 import 'package:salon_app_new/util/custom_colors.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:datetime_picker_formfield/time_picker_formfield.dart';
@@ -56,13 +56,14 @@ class _BookingState extends State<Booking> {
   @override
   Widget build(BuildContext context) {
     CustomColors customColors = CustomColors();
-    CollectionReference collectionReference = Firestore.instance.collection("users");
+//    CollectionReference collectionReference = Firestore.instance.collection("users");
     List<Widget> widgets = List<Widget>();
-    for (var i = 0; i < 9; i++) {
-      widgets.add(Catalogue());
-    }
-    widgets.add(Catalogue(user: widget.user,));
+//    for (var i = 0; i < 9; i++) {
+//      widgets.add(Catalogue());
+//    }
+//    widgets.add(Catalogue(user: widget.user,));
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         resizeToAvoidBottomPadding: false,
         appBar: AppBar(
@@ -149,30 +150,61 @@ class _BookingState extends State<Booking> {
                 const Divider(
                   height: 8.0,
                 ),
-                Text(
-                  "Pick Your barber",
-                  style: TextStyle(color: customColors.primaryColor),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 8.0,bottom: 16.0),
-                  height: 200.0,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: widgets,
-                  ),
-                ),
+//                Text(
+//                  "Pick Your barber",
+//                  style: TextStyle(color: customColors.primaryColor),
+//                ),
+//                Container(
+//                  margin: EdgeInsets.only(top: 8.0,bottom: 16.0),
+//                  height: 223.0,
+//                  child: ListView(
+//                    scrollDirection: Axis.horizontal,
+//                    children: widgets,
+//                  ),
+//                ),
+
+                 Container(
+                   margin:EdgeInsets.only(top: 8.0,bottom: 16.0),
+                   height: 223.0,
+                   child: StreamBuilder(
+              stream: Firestore.instance.collection("barbers").snapshots(),
+              builder: (BuildContext context,snapshot){
+//                print(snapshot.data.documents[0]['photo']);
+                if(!snapshot.hasData)
+                {
+                     return CircularProgressIndicator();
+                }
+                    return ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (_, int i) {
+                        print("HI>>"+i.toString());
+                        print(snapshot.data.documents[i]['photoUrl'].toString());
+                        return BarberCatalogue(name: snapshot.data.documents[i]['name'],
+                          photoUrl: snapshot.data.documents[i]['photo'],
+                          rating: snapshot.data.documents[i]['rating'],);
+                      },
+                      itemCount: snapshot.data.documents.length,
+                    );
+
+              }
+
+            ),
+                 ),
+
+
                 RaisedButton(onPressed: (){
                   // collectionReference.document()
                   // .setData({
                   //   'date' : selectedDate,
                   //   'time' : selectedTime
                   // });
-                  Firestore.instance.collection("users")
-                  .document(widget.user.uid)
-                  .collection("bookings")
-                  .add({
-                    'date' : selectedDate,
-                    'time' : selectedTime,
+
+                  Firestore.instance.collection('users').document(widget.user.email)
+                  .collection("bookings").document(selectedDate.toIso8601String()+selectedTime.toString()).
+                  setData
+                  ({
+                    'date' : selectedDate.toString(),
+                    'time' : selectedTime.toString(),
                   });
                   Fluttertoast.showToast(msg: "Booked ${widget.user.uid}", toastLength: Toast.LENGTH_SHORT);
                  Navigator.pop(context);
