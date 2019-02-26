@@ -167,7 +167,7 @@ class _BookingState extends State<Booking> {
                   //   'date' : selectedDate,
                   //   'time' : selectedTime
                   // });
-                  collectionReference
+                  Firestore.instance.collection("users")
                   .document(widget.user.uid)
                   .collection("bookings")
                   .add({
