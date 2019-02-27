@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:salon_app_new/detail/booking.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:salon_app_new/util/custom_colors.dart';
 import 'barberProfile.dart';
 
@@ -19,7 +20,7 @@ class BarberCatalogue extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => BarberProfile()),
+              builder: (context) => BarberProfile(name: name, picurl: photoUrl, rating: rating,)),
         );
       },
 
@@ -33,8 +34,6 @@ class BarberCatalogue extends StatelessWidget {
                   :Image.network(photoUrl,width: 150.0,height:150.0,fit: BoxFit.fill,),
               Text(name,style: TextStyle(color: customColors.accentColor,fontSize: 20.0,),),
               Text("Rating: "+rating.toString(),style: TextStyle(color: customColors.accentColor,fontSize: 20.0,),),
-
-
 //              Row(
 //                mainAxisAlignment: MainAxisAlignment.start,
 //                children: <Widget>[
