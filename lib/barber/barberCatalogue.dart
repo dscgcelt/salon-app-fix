@@ -10,7 +10,8 @@ class BarberCatalogue extends StatelessWidget {
   final String photoUrl;
   final String name;
   final int rating;
-  BarberCatalogue({this.name,this.photoUrl,this.rating});
+  List<String> skills = <String>[];
+  BarberCatalogue({this.name,this.photoUrl,this.rating,this.skills});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +43,6 @@ class BarberCatalogue extends StatelessWidget {
 //                  IconButton(icon: Icon(Icons.add_shopping_cart), onPressed: null),
 //                ],
 //              ),
-
             ],
           ),
 //          elevation: 2.0,

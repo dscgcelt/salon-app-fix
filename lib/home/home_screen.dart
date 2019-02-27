@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:salon_app_new/onboarding/pages/login_page.dart';
 import 'package:salon_app_new/home/dashboard.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:salon_app_new/util/counter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -24,6 +25,9 @@ class HomeScreenState extends State<HomeScreen> {
   ];
 
   GoogleSignIn googleSignIn = GoogleSignIn();
+
+
+
   @override
   Widget build(BuildContext context) {
     CustomColors customColor = CustomColors();
@@ -34,6 +38,65 @@ class HomeScreenState extends State<HomeScreen> {
           title: Text("Cut & Trim"),
           backgroundColor: customColor.primaryColor,
           actions: <Widget>[
+               IconButton(
+                 onPressed: null,
+                 icon: Stack(
+                  children: <Widget>[
+                    Positioned(
+                      top: 10.0,
+                      child: Icon(
+                        Icons.shopping_cart,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 8.0,
+                      child: Container(
+                        margin: EdgeInsets.only(bottom:4.0) ,
+                        padding: EdgeInsets.all(1.0),
+                        height: 14.0,
+                        width: 14.0,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.red,
+                        ),
+//                      constraints: BoxConstraints(
+//                        minWidth: 4.0,
+//                        minHeight: 4.0,
+//                      ),
+//                        child: Center(
+//                          child: Text(
+//                            "$counter",
+//                            style: TextStyle(
+//                             color: Colors.white,
+//                             fontSize: 10.0,
+//                              fontWeight: FontWeight.bold,
+//                            ),
+//                          ),
+//                        ) ,
+                      child:StreamBuilder<int>(
+                        stream: streamCntrl.stream,
+                        initialData: counter,
+                        builder: (BuildContext context,AsyncSnapshot<int>snapshot){
+                          print(snapshot.data);
+                          return Center(
+                          child: Text(
+                            snapshot.data.toString(),
+                            style: TextStyle(
+                             color: Colors.white,
+                             fontSize: 10.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        );
+                        },
+                      )
+                      ),
+                    ),
+                  ],
+              ),
+                ),
+
             PopupMenuButton<Choice>(
               elevation: 3.2,
               onSelected: _handleChoiceSelect,
@@ -183,7 +246,7 @@ class HaircutListMenu extends StatelessWidget {
     CustomColors customColor = CustomColors();
     List<Widget> widgets = List<Widget>();
     for (var i = 0; i < 10; i++) {
-      widgets.add(Catalogue(name:"Style"));
+      widgets.add(Catalogue(name:"Style",user: user,));
     }
       
     return Container(
@@ -198,32 +261,33 @@ class HaircutListMenu extends StatelessWidget {
           Container(
             margin: EdgeInsets.only(top: 8.0, bottom: 16.0),
             height: 223.0,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: widgets,
-            ),
-//            child: StreamBuilder(
-//              stream: Firestore.instance.collection("barbers").snapshots(),
-//              builder: (BuildContext context,snapshot){
-////                print(snapshot.data.documents[0]['photo']);
-//                if(!snapshot.hasData)
-//                {
-//                   return CircularProgressIndicator();
-//                }
-//                  return ListView.builder(
-//                    scrollDirection: Axis.horizontal,
-//                    itemBuilder: (_, int i) {
-//                      print("HI>>"+i.toString());
-//                      print(snapshot.data.documents[i]['photoUrl'].toString());
-//                      return Catalogue(name: snapshot.data.documents[i]['name'],
-//                        photoUrl: snapshot.data.documents[i]['photo'],);
-//                    },
-//                    itemCount: snapshot.data.documents.length,
-//                  );
-//
-//              }
-//
+//            child: ListView(
+//              scrollDirection: Axis.horizontal,
+//              children: widgets,
 //            ),
+            child: StreamBuilder(
+              stream: Firestore.instance.collection("haircuts").snapshots(),
+              builder: (BuildContext context,snapshot){
+//                print(snapshot.data.documents[0]['photo']);
+                if(!snapshot.hasData)
+                {
+                   return CircularProgressIndicator();
+                }
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (_, int i) {
+                      print("HI>>"+i.toString());
+//                      print(snapshot.data.documents[i]['photoUrl'].toString());
+                      return Catalogue(name: snapshot.data.documents[i]['name'],
+                        photoUrl: snapshot.data.documents[i]['photo'],
+                          user: user,);
+                    },
+                    itemCount: snapshot.data.documents.length,
+                  );
+
+              }
+
+            ),
           ),
           Text(
             "Beard",
@@ -233,33 +297,35 @@ class HaircutListMenu extends StatelessWidget {
           Container(
             margin: EdgeInsets.only(top: 8.0, bottom: 16.0),
             height: 223.0,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: widgets,
-            ),
-//            child: StreamBuilder(
-////              initialData: widgets,
-//                stream: Firestore.instance.collection("barbers").snapshots(),
-//                builder: (BuildContext context,snapshot){
-////                print(snapshot.data.documents[0]['photo']);
-//                  if(!snapshot.hasData)
-//                  {
-//                    return CircularProgressIndicator();
-//                  }
-//                  print(snapshot.data.documents.length);
-//                  return ListView.builder(
-//
-//                    scrollDirection: Axis.horizontal,
-//                    itemBuilder: (context, int i) {
-//                      print("HI>>"+i.toString());
-//                      return Catalogue(name: snapshot.data.documents[i]['name'],
-//                        photoUrl: snapshot.data.documents[i]['photo'],);
-//                    },
-//                    itemCount: snapshot.data.documents.length,
-//                  );
-//
-//                }
+//            child: ListView(
+//              scrollDirection: Axis.horizontal,
+//              children: widgets,
+//            ),
+            child: StreamBuilder(
+//              initialData: widgets,
+                stream: Firestore.instance.collection("haircuts").snapshots(),
+                builder: (BuildContext context,snapshot){
+//                print(snapshot.data.documents[0]['photo']);
+                  if(!snapshot.hasData)
+                  {
+                    return CircularProgressIndicator();
+                  }
+                  print(snapshot.data.documents.length);
+                  return ListView.builder(
+
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, int i) {
+                      print("HI>>"+i.toString());
+                      return Catalogue(name: snapshot.data.documents[i]['name'],
+                        photoUrl: snapshot.data.documents[i]['photo'],
+                      user: user,);
+                    },
+                    itemCount: snapshot.data.documents.length,
+                  );
+
+                }
 //          ),
+          ),
           )
         ],
       ),

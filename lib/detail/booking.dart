@@ -11,7 +11,9 @@ import 'package:datetime_picker_formfield/time_picker_formfield.dart';
 
 class Booking extends StatefulWidget {
   final FirebaseUser user;
-  Booking({this.user});
+  final String name;
+  final String photoUrl;
+  Booking({this.user,this.name,this.photoUrl});
   
   @override
   _BookingState createState() => _BookingState();
@@ -77,12 +79,12 @@ class _BookingState extends State<Booking> {
               children: <Widget>[
                 Padding(padding: EdgeInsets.all(8.0)),
                 Center(
-                    child: Image.asset(
-                      "images/haircut.jpg",
+                    child: widget.photoUrl==null?CircularProgressIndicator():Image.network(
+                      widget.photoUrl,
                       height: 300,
                       width: 300,
                     )),
-                Text("Mohawk"),
+                Text(widget.name),
                 // new ListTile(
                 //   leading: const Icon(Icons.calendar_today),
                 //   title: new TextField(
@@ -150,10 +152,10 @@ class _BookingState extends State<Booking> {
                 const Divider(
                   height: 8.0,
                 ),
-//                Text(
-//                  "Pick Your barber",
-//                  style: TextStyle(color: customColors.primaryColor),
-//                ),
+                Text(
+                  "Pick Your barber",
+                  style: TextStyle(color: customColors.primaryColor),
+                ),
 //                Container(
 //                  margin: EdgeInsets.only(top: 8.0,bottom: 16.0),
 //                  height: 223.0,
@@ -181,7 +183,9 @@ class _BookingState extends State<Booking> {
                         print(snapshot.data.documents[i]['photoUrl'].toString());
                         return BarberCatalogue(name: snapshot.data.documents[i]['name'],
                           photoUrl: snapshot.data.documents[i]['photo'],
-                          rating: snapshot.data.documents[i]['rating'],);
+                          rating: snapshot.data.documents[i]['rating'],
+                          skills: null,
+                        );
                       },
                       itemCount: snapshot.data.documents.length,
                     );
@@ -193,12 +197,7 @@ class _BookingState extends State<Booking> {
 
 
                 RaisedButton(onPressed: (){
-                  // collectionReference.document()
-                  // .setData({
-                  //   'date' : selectedDate,
-                  //   'time' : selectedTime
-                  // });
-
+                  print(widget.user.email);
                   Firestore.instance.collection('users').document(widget.user.email)
                   .collection("bookings").document(selectedDate.toIso8601String()+selectedTime.toString()).
                   setData
