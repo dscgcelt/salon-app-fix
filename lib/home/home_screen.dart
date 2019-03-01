@@ -8,6 +8,7 @@ import 'package:salon_app_new/home/dashboard.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:salon_app_new/util/counter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:salon_app_new/detail/cart.dart';
 
 class HomeScreen extends StatefulWidget {
   final FirebaseUser user;
@@ -39,7 +40,10 @@ class HomeScreenState extends State<HomeScreen> {
           backgroundColor: customColor.primaryColor,
           actions: <Widget>[
                IconButton(
-                 onPressed: null,
+                 onPressed: ()=> Navigator.push(
+                   context,
+                   MaterialPageRoute(builder: (context)=>CartDeatails(user: widget.user,))
+                 ),
                  icon: Stack(
                   children: <Widget>[
                     Positioned(
