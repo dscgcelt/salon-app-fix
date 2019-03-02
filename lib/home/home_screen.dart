@@ -284,7 +284,8 @@ class HaircutListMenu extends StatelessWidget {
 //                      print(snapshot.data.documents[i]['photoUrl'].toString());
                       return Catalogue(name: snapshot.data.documents[i]['name'],
                         photoUrl: snapshot.data.documents[i]['photo'],
-                          user: user,);
+                          user: user,
+                      price: snapshot.data.documents[i]['price'],);
                     },
                     itemCount: snapshot.data.documents.length,
                   );
@@ -322,6 +323,7 @@ class HaircutListMenu extends StatelessWidget {
                       print("HI>>"+i.toString());
                       return Catalogue(name: snapshot.data.documents[i]['name'],
                         photoUrl: snapshot.data.documents[i]['photo'],
+                      price: snapshot.data.documents[i]['price'],
                       user: user,);
                     },
                     itemCount: snapshot.data.documents.length,

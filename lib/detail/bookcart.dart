@@ -8,52 +8,54 @@ import 'package:salon_app_new/barber/barberCatalogue.dart';
 import 'package:salon_app_new/util/custom_colors.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:datetime_picker_formfield/time_picker_formfield.dart';
+import 'package:salon_app_new/util/counter.dart';
+import 'package:salon_app_new/home/home_screen.dart';
 
-class Booking extends StatefulWidget {
+class BookCart extends StatefulWidget {
   final FirebaseUser user;
-  final String name;
-  final String photoUrl;
-  final String price;
-  Booking({this.user,this.name,this.photoUrl,this.price});
-  
+//  final String name;
+//  final String photoUrl;
+//  final String price;
+  BookCart({this.user});
+
   @override
-  _BookingState createState() => _BookingState();
+  _BookCartState createState() => _BookCartState();
 }
 
-class _BookingState extends State<Booking> {
+class _BookCartState extends State<BookCart> {
   final dateFormat = DateFormat("EEEE, MMMM d, yyyy 'at' h:mma");
   DateTime date;
   TimeOfDay time;
-    static var selectedDate = DateTime.now();
-    static var selectedDateTime = DateTime.now();
-    static var selectedTime = TimeOfDay.now();
-    static var _dateFormat = DateFormat('dd-MM-yyyy');
-    static var _timeFormat = DateFormat("h:mm a");
+  static var selectedDate = DateTime.now();
+  static var selectedDateTime = DateTime.now();
+  static var selectedTime = TimeOfDay.now();
+  static var _dateFormat = DateFormat('dd-MM-yyyy');
+  static var _timeFormat = DateFormat("h:mm a");
 
   Future<Null> _selectTime(BuildContext context) async{
     final TimeOfDay pickedTime = await showTimePicker(
-       context: context,
-       initialTime: selectedTime,
-       
+      context: context,
+      initialTime: selectedTime,
+
     );
     if(pickedTime != null && pickedTime != selectedTime)
-    setState(() {
-      selectedTime = pickedTime;
-    });
+      setState(() {
+        selectedTime = pickedTime;
+      });
   }
 
   Future<Null> _selectDate(BuildContext context) async{
     final DateTime picked = await showDatePicker(
-       context: context,
-       initialDate: selectedDate,
-       firstDate: DateTime(2009),
-       lastDate: DateTime(2110),
-    ); 
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2009),
+      lastDate: DateTime(2110),
+    );
     if(picked !=null && picked != selectedDate)
-    setState(() {
-     selectedDate = picked; 
-     selectedDateTime = picked; //for emergencycase
-    });
+      setState(() {
+        selectedDate = picked;
+        selectedDateTime = picked; //for emergencycase
+      });
   }
 
   @override
@@ -78,20 +80,20 @@ class _BookingState extends State<Booking> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: <Widget>[
-                Padding(padding: EdgeInsets.all(8.0)),
-                Center(
-                    child: widget.photoUrl==null?CircularProgressIndicator():Image.network(
-                      widget.photoUrl,
-                      height: 300,
-                      width: 300,
-                    )),
-                Text(widget.name),
+//                Padding(padding: EdgeInsets.all(8.0)),
+//                Center(
+//                    child: widget.photoUrl==null?CircularProgressIndicator():Image.network(
+//                      widget.photoUrl,
+//                      height: 300,
+//                      width: 300,
+//                    )),
+//                Text(widget.name),
                 // new ListTile(
                 //   leading: const Icon(Icons.calendar_today),
                 //   title: new TextField(
                 //     decoration: new InputDecoration(
                 //       hintText: "Date",
-                      
+
                 //     ),
                 //   ),
                 // ),
@@ -100,16 +102,16 @@ class _BookingState extends State<Booking> {
                   child: Row(
                     children: <Widget>[
                       Text("${_dateFormat.format(selectedDate)}",
-          
-                      style: TextStyle(
-                        fontSize: 20.0
-                      ),
+
+                        style: TextStyle(
+                            fontSize: 20.0
+                        ),
                       ),
                       SizedBox(width: 30.0),
                       FloatingActionButton(onPressed: () => _selectDate(context),
-                      child: const Icon(Icons.calendar_today) ,
-                      elevation: 8.0,
-                      heroTag: "fab1",
+                        child: const Icon(Icons.calendar_today) ,
+                        elevation: 8.0,
+                        heroTag: "fab1",
                       ),
                     ],
                   ),
@@ -128,10 +130,10 @@ class _BookingState extends State<Booking> {
                   child: Row(
                     children: <Widget>[
                       Text("${selectedTime.format(context)}",
-                      // Text("${_timeFormat.format(selectedDateTime)}",
-                      style: TextStyle(
-                        fontSize: 20.0
-                      ),
+                        // Text("${_timeFormat.format(selectedDateTime)}",
+                        style: TextStyle(
+                            fontSize: 20.0
+                        ),
                       ),
                       SizedBox(width: 55.0,),
                       FloatingActionButton(onPressed: () =>_selectTime(context),
@@ -166,41 +168,41 @@ class _BookingState extends State<Booking> {
 //                  ),
 //                ),
 
-                 Container(
-                   margin:EdgeInsets.only(top: 8.0,bottom: 16.0),
-                   height: 223.0,
-                   child: StreamBuilder(
-              stream: Firestore.instance.collection("barbers").snapshots(),
-              builder: (BuildContext context,snapshot){
+                Container(
+                  margin:EdgeInsets.only(top: 8.0,bottom: 16.0),
+                  height: 223.0,
+                  child: StreamBuilder(
+                      stream: Firestore.instance.collection("barbers").snapshots(),
+                      builder: (BuildContext context,snapshot){
 //                print(snapshot.data.documents[0]['photo']);
-                if(!snapshot.hasData)
-                {
-                     return CircularProgressIndicator();
-                }
-                    return ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (_, int i) {
-                        print("HI>>"+i.toString());
-                        print(snapshot.data.documents[i]['photoUrl'].toString());
-                        return BarberCatalogue(name: snapshot.data.documents[i]['name'],
-                          photoUrl: snapshot.data.documents[i]['photo'],
-                          rating: snapshot.data.documents[i]['rating'],
-                          skills: null,
+                        if(!snapshot.hasData)
+                        {
+                          return CircularProgressIndicator();
+                        }
+                        return ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (_, int i) {
+                            print("HI>>"+i.toString());
+                            print(snapshot.data.documents[i]['photoUrl'].toString());
+                            return BarberCatalogue(name: snapshot.data.documents[i]['name'],
+                              photoUrl: snapshot.data.documents[i]['photo'],
+                              rating: snapshot.data.documents[i]['rating'],
+                              skills: null,
+                            );
+                          },
+                          itemCount: snapshot.data.documents.length,
                         );
-                      },
-                      itemCount: snapshot.data.documents.length,
-                    );
 
-              }
+                      }
 
-            ),
-                 ),
+                  ),
+                ),
 
 
                 RaisedButton(onPressed: (){
                   _handleBooking();
                 },
-                child: Text("Book your date"),)
+                  child: Text("Book your date"),)
               ],
             ),
           ),
@@ -208,19 +210,29 @@ class _BookingState extends State<Booking> {
       ),
     );
   }
-
   _handleBooking(){
+
     print(widget.user.email);
+    Firestore.instance.collection("users").document(widget.user.email).collection("cart").getDocuments().
+    then((snapshot){
+      for(DocumentSnapshot ds in snapshot.documents){
+        ds.reference.delete();
+      }
+    });
+    saved.clear();
+    counter=0;
+    streamCntrl.sink.add(0);
     Firestore.instance.collection('users').document(widget.user.email)
         .collection("bookings").document(_dateFormat.format(selectedDate).toString()+selectedTime.toString()).
     setData
       ({
       'date' : _dateFormat.format(selectedDate).toString(),
       'time' : selectedTime.toString(),
-      'booking':{widget.name:widget.price},
+      'booking': bookings,
     });
     Fluttertoast.showToast(msg: "Booked ${widget.user.uid}", toastLength: Toast.LENGTH_SHORT);
-    Navigator.pop(context);
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
+//    Navigator.of(context).push(MaterialPageRoute(builder: (context)=>HomeScreen(user: widget.user,)));
   }
-
 }

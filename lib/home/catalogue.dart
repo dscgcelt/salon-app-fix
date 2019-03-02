@@ -9,8 +9,8 @@ class Catalogue extends StatefulWidget {
   final FirebaseUser user;
   final String photoUrl;
   final String name;
-
-  Catalogue({this.name,this.photoUrl,this.user});
+  final String price;
+  Catalogue({this.name,this.photoUrl,this.user,this.price});
 
   @override
   CatalogueState createState() {
@@ -21,20 +21,21 @@ class Catalogue extends StatefulWidget {
 class CatalogueState extends State<Catalogue> {
   int c = 0 ;
   //  Set<String> _saved = Set<String>();
-  _saveItem(String value){
+  _saveItem(String name,String price){
 //    streamCntrl.sink.add(++counter);
       Firestore.instance.collection("users").document(widget.user.email).
-            collection("cart").document(value).setData(
+            collection("cart").document(name).setData(
               {
-                "name": value.toString(),
+                "name": name.toString(),
                 "photo": widget.photoUrl,
-                "price": "10",
+                "price": widget.price,
               }
       );
 
     setState(() {
 //      ++counter;
-      saved.add(value);
+      saved.add(name);
+      bookings.addAll({name:price});
     });
   }
 
@@ -58,7 +59,7 @@ class CatalogueState extends State<Catalogue> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => Booking(user: widget.user,name: widget.name,photoUrl: widget.photoUrl,)),
+              builder: (context) => Booking(user: widget.user,name: widget.name,photoUrl: widget.photoUrl,price: widget.price,)),
         );
       },
 
@@ -85,7 +86,7 @@ class CatalogueState extends State<Catalogue> {
                   },
                   ):IconButton(icon: Icon(Icons.add_shopping_cart,color: Colors.grey,), onPressed: () {
                     streamCntrl.sink.add(++counter);
-                    _saveItem(widget.name);
+                    _saveItem(widget.name,widget.price);
                     print(saved.toString());
                     print(counter);
                   },
