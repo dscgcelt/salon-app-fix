@@ -20,8 +20,7 @@ class Catalogue extends StatefulWidget {
 
 class CatalogueState extends State<Catalogue> {
   int c = 0 ;
-
-  List<String> _saved = List<String>();
+  //  Set<String> _saved = Set<String>();
   _saveItem(String value){
 //    streamCntrl.sink.add(++counter);
       Firestore.instance.collection("users").document(widget.user.email).
@@ -35,7 +34,7 @@ class CatalogueState extends State<Catalogue> {
 
     setState(() {
 //      ++counter;
-      _saved.add(value);
+      saved.add(value);
     });
   }
 
@@ -47,7 +46,7 @@ class CatalogueState extends State<Catalogue> {
     setState(() {
 //      streamCntrl.sink.add(--counter);
 //      --counter;
-      _saved.remove(value);
+      saved.remove(value);
     });
   }
 
@@ -78,16 +77,16 @@ class CatalogueState extends State<Catalogue> {
                 children: <Widget>[
                   Text("\$10",style: TextStyle(color: customColors.primaryTextColor),),
                   SizedBox(width: 14.0,),
-                  _saved.contains(widget.name)?IconButton(icon: Icon(Icons.add_shopping_cart,color:Colors.green), onPressed: () {
+                  saved.contains(widget.name)?IconButton(icon: Icon(Icons.add_shopping_cart,color:Colors.green), onPressed: () {
                     streamCntrl.sink.add(--counter);
                     _discardItem(widget.name);
-                    print(_saved.toString());
+                    print(saved.toString());
                     print(counter);
                   },
                   ):IconButton(icon: Icon(Icons.add_shopping_cart,color: Colors.grey,), onPressed: () {
                     streamCntrl.sink.add(++counter);
                     _saveItem(widget.name);
-                    print(_saved.toString());
+                    print(saved.toString());
                     print(counter);
                   },
                   ),

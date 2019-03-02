@@ -42,7 +42,7 @@ class HomeScreenState extends State<HomeScreen> {
                IconButton(
                  onPressed: ()=> Navigator.push(
                    context,
-                   MaterialPageRoute(builder: (context)=>CartDeatails(user: widget.user,))
+                   MaterialPageRoute(builder: (context)=>CartDetails(user: widget.user,))
                  ),
                  icon: Stack(
                   children: <Widget>[
@@ -307,7 +307,7 @@ class HaircutListMenu extends StatelessWidget {
 //            ),
             child: StreamBuilder(
 //              initialData: widgets,
-                stream: Firestore.instance.collection("haircuts").snapshots(),
+                stream: Firestore.instance.collection("beard").snapshots(),
                 builder: (BuildContext context,snapshot){
 //                print(snapshot.data.documents[0]['photo']);
                   if(!snapshot.hasData)
