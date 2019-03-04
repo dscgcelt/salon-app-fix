@@ -5,13 +5,32 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:salon_app_new/util/custom_colors.dart';
 import 'barberProfile.dart';
 
-class BarberCatalogue extends StatelessWidget {
+class BarberCatalogue extends StatefulWidget {
 //  final FirebaseUser user;
   final String photoUrl;
   final String name;
   final int rating;
   List<String> skills = <String>[];
   BarberCatalogue({this.name,this.photoUrl,this.rating,this.skills});
+
+  @override
+  _BarberCatalogueState createState() => _BarberCatalogueState();
+}
+
+class _BarberCatalogueState extends State<BarberCatalogue> {
+  Color selcolor = Colors.white;
+  bool isSelected = false;
+  void togglecolor(){
+     setState(() {
+       if(isSelected){
+      selcolor = Colors.purpleAccent;
+      isSelected=false;
+       }else{
+          selcolor = Colors.white;
+          isSelected = true;
+       }
+     });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,20 +40,22 @@ class BarberCatalogue extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => BarberProfile(name: name, picurl: photoUrl, rating: rating,)),
+              builder: (context) => BarberProfile(name: widget.name, picurl: widget.photoUrl, rating: widget.rating,)),
         );
       },
+      onLongPress: togglecolor,
 
       child: Padding(
         padding: const EdgeInsets.only(bottom:2.0),
         child: Card(
+          color: selcolor,
           margin: EdgeInsets.only(right: 8.0),
           child: Column(
             children: <Widget>[
-              photoUrl==null?Image.asset("images/haircut.jpg",width: 150.0,height:150.0,fit: BoxFit.fill,)
-                  :Image.network(photoUrl,width: 150.0,height:150.0,fit: BoxFit.fill,),
-              Text(name,style: TextStyle(color: customColors.accentColor,fontSize: 20.0,),),
-              Text("Rating: "+rating.toString(),style: TextStyle(color: customColors.accentColor,fontSize: 20.0,),),
+              widget.photoUrl==null?Image.asset("images/haircut.jpg",width: 150.0,height:150.0,fit: BoxFit.fill,)
+                  :Image.network(widget.photoUrl,width: 150.0,height:150.0,fit: BoxFit.fill,),
+              Text(widget.name,style: TextStyle(color: customColors.accentColor,fontSize: 20.0,),),
+              Text("Rating: "+widget.rating.toString(),style: TextStyle(color: customColors.accentColor,fontSize: 20.0,),),
 //              Row(
 //                mainAxisAlignment: MainAxisAlignment.start,
 //                children: <Widget>[

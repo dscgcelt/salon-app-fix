@@ -6,6 +6,7 @@ import 'package:salon_app_new/util/counter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Catalogue extends StatefulWidget {
+
   final FirebaseUser user;
   final String photoUrl;
   final String name;
@@ -52,6 +53,12 @@ class CatalogueState extends State<Catalogue> {
   }
 
   @override
+  _CatalogueState createState() => _CatalogueState();
+}
+
+class _CatalogueState extends State<Catalogue> {
+
+  @override
   Widget build(BuildContext context) {
     CustomColors customColors = CustomColors();
     return InkWell(
@@ -78,6 +85,11 @@ class CatalogueState extends State<Catalogue> {
                 children: <Widget>[
                   Text("\$10",style: TextStyle(color: customColors.primaryTextColor),),
                   SizedBox(width: 14.0,),
+
+                  IconButton(icon: Icon(Icons.add_shopping_cart), onPressed: (){
+
+                  }),
+
                   saved.contains(widget.name)?IconButton(icon: Icon(Icons.add_shopping_cart,color:Colors.green), onPressed: () {
                     streamCntrl.sink.add(--counter);
                     _discardItem(widget.name);
