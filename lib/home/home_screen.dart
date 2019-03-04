@@ -39,23 +39,23 @@ class HomeScreenState extends State<HomeScreen> {
           title: Text("Cut & Trim"),
           backgroundColor: customColor.primaryColor,
           actions: <Widget>[
-               IconButton(
-                 onPressed: ()=> Navigator.push(
-                   context,
-                   MaterialPageRoute(builder: (context)=>CartDetails(user: widget.user,))
-                 ),
-                 icon: Stack(
-                  children: <Widget>[
-                    Positioned(
-                      top: 10.0,
-                      child: Icon(
-                        Icons.shopping_cart,
-                        color: Colors.white,
-                      ),
+            IconButton(
+              onPressed: ()=> Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context)=>CartDetails(user: widget.user,))
+              ),
+              icon: Stack(
+                children: <Widget>[
+                  Positioned(
+                    top: 10.0,
+                    child: Icon(
+                      Icons.shopping_cart,
+                      color: Colors.white,
                     ),
-                    Positioned(
-                      bottom: 8.0,
-                      child: Container(
+                  ),
+                  Positioned(
+                    bottom: 8.0,
+                    child: Container(
                         margin: EdgeInsets.only(bottom:4.0) ,
                         padding: EdgeInsets.all(1.0),
                         height: 14.0,
@@ -78,28 +78,28 @@ class HomeScreenState extends State<HomeScreen> {
 //                            ),
 //                          ),
 //                        ) ,
-                      child:StreamBuilder<int>(
-                        stream: streamCntrl.stream,
-                        initialData: counter,
-                        builder: (BuildContext context,AsyncSnapshot<int>snapshot){
-                          print(snapshot.data);
-                          return Center(
-                          child: Text(
-                            snapshot.data.toString(),
-                            style: TextStyle(
-                             color: Colors.white,
-                             fontSize: 10.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        );
-                        },
-                      )
-                      ),
+                        child:StreamBuilder<int>(
+                          stream: streamCntrl.stream,
+                          initialData: counter,
+                          builder: (BuildContext context,AsyncSnapshot<int>snapshot){
+                            print(snapshot.data);
+                            return Center(
+                              child: Text(
+                                snapshot.data.toString(),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            );
+                          },
+                        )
                     ),
-                  ],
+                  ),
+                ],
               ),
-                ),
+            ),
 
             PopupMenuButton<Choice>(
               elevation: 3.2,
@@ -179,7 +179,7 @@ class HomeScreenState extends State<HomeScreen> {
     //handling selected Choice from apppbar actions(popupmenu button)
 
     if (choice == choices[0]) {
-       Fluttertoast.showToast(msg: "Settings");
+      Fluttertoast.showToast(msg: "Settings");
     } else if (choice == choices[1]) {
       // Fluttertoast.showToast(msg: "Log out");
       _handleSignOut(context);
@@ -209,18 +209,18 @@ class LastVisitCard extends StatelessWidget {
           children: <Widget>[
             Expanded(
                 child: Column(
-              children: <Widget>[
-                Text(
-                  "Last Visit",
-                  style: TextStyle(
-                      color: customColor.primaryColor, fontSize: 30.0),
-                ),
-                Text(
-                  "3 months ago",
-                  style: TextStyle(color: customColor.primaryTextColor),
-                )
-              ],
-            )),
+                  children: <Widget>[
+                    Text(
+                      "Last Visit",
+                      style: TextStyle(
+                          color: customColor.primaryColor, fontSize: 30.0),
+                    ),
+                    Text(
+                      "3 months ago",
+                      style: TextStyle(color: customColor.primaryTextColor),
+                    )
+                  ],
+                )),
             RaisedButton(
               onPressed: () {},
               color: customColor.primaryColor,
@@ -241,7 +241,7 @@ class LastVisitCard extends StatelessWidget {
 
 class HaircutListMenu extends StatelessWidget {
   final FirebaseUser user;
-  
+
   HaircutListMenu({this.user});
   // final CustomColors customColor = CustomColors();
 
@@ -252,7 +252,7 @@ class HaircutListMenu extends StatelessWidget {
     for (var i = 0; i < 10; i++) {
       widgets.add(Catalogue(name:"Style",user: user,));
     }
-      
+
     return Container(
       margin: EdgeInsets.only(top: 10.0, left: 15.0),
       child: Column(
@@ -270,13 +270,13 @@ class HaircutListMenu extends StatelessWidget {
 //              children: widgets,
 //            ),
             child: StreamBuilder(
-              stream: Firestore.instance.collection("haircuts").snapshots(),
-              builder: (BuildContext context,snapshot){
+                stream: Firestore.instance.collection("haircuts").snapshots(),
+                builder: (BuildContext context,snapshot){
 //                print(snapshot.data.documents[0]['photo']);
-                if(!snapshot.hasData)
-                {
-                   return CircularProgressIndicator();
-                }
+                  if(!snapshot.hasData)
+                  {
+                    return CircularProgressIndicator();
+                  }
                   return ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (_, int i) {
@@ -284,13 +284,12 @@ class HaircutListMenu extends StatelessWidget {
 //                      print(snapshot.data.documents[i]['photoUrl'].toString());
                       return Catalogue(name: snapshot.data.documents[i]['name'],
                         photoUrl: snapshot.data.documents[i]['photo'],
-                          user: user,
-                      price: snapshot.data.documents[i]['price'],);
+                        user: user,);
                     },
                     itemCount: snapshot.data.documents.length,
                   );
 
-              }
+                }
 
             ),
           ),
@@ -323,15 +322,14 @@ class HaircutListMenu extends StatelessWidget {
                       print("HI>>"+i.toString());
                       return Catalogue(name: snapshot.data.documents[i]['name'],
                         photoUrl: snapshot.data.documents[i]['photo'],
-                      price: snapshot.data.documents[i]['price'],
-                      user: user,);
+                        user: user,);
                     },
                     itemCount: snapshot.data.documents.length,
                   );
 
                 }
 //          ),
-          ),
+            ),
           )
         ],
       ),
