@@ -82,6 +82,18 @@ class HomeScreenState extends State<HomeScreen> {
                           stream: streamCntrl.stream,
                           initialData: counter,
                           builder: (BuildContext context,AsyncSnapshot<int>snapshot){
+                            if(!snapshot.hasData){
+                              return Center(
+                                child: Text(
+                                  "0",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              );
+                            }
                             print(snapshot.data);
                             return Center(
                               child: Text(
