@@ -6,10 +6,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:salon_app_new/onboarding/pages/login_page.dart';
 import 'package:salon_app_new/home/dashboard.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:salon_app_new/detail/booking.dart';
 
 class HomeScreen extends StatefulWidget {
   final FirebaseUser user;
+
   HomeScreen({this.user});
   @override
   HomeScreenState createState() {
@@ -23,10 +24,17 @@ class HomeScreenState extends State<HomeScreen> {
     Choice(icon: Icons.exit_to_app, title: "Log Out"),
   ];
 
+  int count = 0;
+  List<int> listnew = [];
+
   GoogleSignIn googleSignIn = GoogleSignIn();
   @override
   Widget build(BuildContext context) {
     CustomColors customColor = CustomColors();
+    List<Widget> widgets = List<Widget>();
+    for (var i = 0; i < 10; i++) {
+      widgets.add(catalogue(context, "Style", null));
+    }
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -34,6 +42,54 @@ class HomeScreenState extends State<HomeScreen> {
           title: Text("Cut & Trim"),
           backgroundColor: customColor.primaryColor,
           actions: <Widget>[
+            new Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: new Container(
+                  height: 150.0,
+                  width: 30.0,
+                  child: new GestureDetector(
+                    onTap: () {
+                      // Navigator.of(context).push(
+                      //     // new MaterialPageRoute(
+                      //     //     builder:(BuildContext context) =>
+                      //     //     new CartItemsScreen()
+                      //     )
+                      // );
+                    },
+                    child: new Stack(
+                      children: <Widget>[
+                        new IconButton(
+                          icon: new Icon(
+                            Icons.shopping_cart,
+                            color: Colors.white,
+                          ),
+                          onPressed: null,
+                        ),
+                        listnew.length == 0
+                            ? new Container()
+                            : new Positioned(
+                                child: new Stack(
+                                children: <Widget>[
+                                  new Icon(Icons.brightness_1,
+                                      size: 20.0, color: Colors.green[800]),
+                                  new Positioned(
+                                      top: 3.0,
+                                      right: 4.0,
+                                      child: new Center(
+                                        child: new Text(
+                                          listnew.length.toString(),
+                                          style: new TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 11.0,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      )),
+                                ],
+                              )),
+                      ],
+                    ),
+                  )),
+            ),
             PopupMenuButton<Choice>(
               elevation: 3.2,
               onSelected: _handleChoiceSelect,
@@ -82,9 +138,44 @@ class HomeScreenState extends State<HomeScreen> {
 //                      ),
 //                    ),
 //                  ),
-                  DashBoard(user: widget.user,),
+                  DashBoard(
+                    user: widget.user,
+                  ),
                   LastVisitCard(),
-                  HaircutListMenu(user: widget.user,),
+                  // HaircutListMenu(user: widget.user,key:key),
+                  Container(
+                    margin: EdgeInsets.only(top: 10.0, left: 15.0),
+                    child: Column(
+                      children: <Widget>[
+                        Text(
+                          "Haircuts",
+                          textAlign: TextAlign.left,
+                          style: TextStyle(color: customColor.primaryColor),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(top: 8.0, bottom: 16.0),
+                          height: 223.0,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: widgets,
+                          ),
+                        ),
+                        Text(
+                          "Beard",
+                          textAlign: TextAlign.left,
+                          style: TextStyle(color: customColor.primaryColor),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(top: 8.0, bottom: 16.0),
+                          height: 223.0,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: widgets,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                 ],
               )
             ],
@@ -93,6 +184,69 @@ class HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
+  final CustomColors customColors = new CustomColors();
+
+  Widget catalogue(BuildContext context, String name, String photoUrl) =>
+      InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Booking()),
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 2.0),
+          child: Card(
+            margin: EdgeInsets.only(right: 8.0),
+            child: Column(
+              children: <Widget>[
+                photoUrl == null
+                    ? Image.asset(
+                        "images/haircut.jpg",
+                        width: 150.0,
+                        height: 150.0,
+                        fit: BoxFit.fill,
+                      )
+                    : Image.network(
+                        photoUrl,
+                        width: 150.0,
+                        height: 150.0,
+                        fit: BoxFit.fill,
+                      ),
+                Text(
+                  name,
+                  style: TextStyle(
+                    color: customColors.accentColor,
+                    fontSize: 20.0,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      "\$10",
+                      style: TextStyle(color: customColors.primaryTextColor),
+                    ),
+                    SizedBox(
+                      width: 14.0,
+                    ),
+                    IconButton(
+                        icon: Icon(Icons.add_shopping_cart),
+                        onPressed: () {
+                          setState(() {
+                            count++;
+                            listnew.add(count);
+                          });
+                        }),
+                  ],
+                ),
+              ],
+            ),
+//          elevation: 2.0,
+          ),
+        ),
+      );
 
   void _handleSignOut(BuildContext context) async {
     FirebaseAuth.instance.signOut().then((value) {
@@ -112,14 +266,13 @@ class HomeScreenState extends State<HomeScreen> {
     //handling selected Choice from apppbar actions(popupmenu button)
 
     if (choice == choices[0]) {
-       Fluttertoast.showToast(msg: "Settings");
+      Fluttertoast.showToast(msg: "Settings");
     } else if (choice == choices[1]) {
       // Fluttertoast.showToast(msg: "Log out");
       _handleSignOut(context);
       googleSignIn.disconnect();
     }
   }
-
 }
 
 class Choice {
@@ -172,99 +325,147 @@ class LastVisitCard extends StatelessWidget {
   }
 }
 
-class HaircutListMenu extends StatelessWidget {
-  final FirebaseUser user;
-  
-  HaircutListMenu({this.user});
-  // final CustomColors customColor = CustomColors();
+// class HaircutListMenu extends StatefulWidget {
+//   final FirebaseUser user;
 
-  @override
-  Widget build(BuildContext context) {
-    CustomColors customColor = CustomColors();
-    List<Widget> widgets = List<Widget>();
-    for (var i = 0; i < 10; i++) {
-      widgets.add(Catalogue(name:"Style"));
-    }
-      
-    return Container(
-      margin: EdgeInsets.only(top: 10.0, left: 15.0),
-      child: Column(
-        children: <Widget>[
-          Text(
-            "Haircuts",
-            textAlign: TextAlign.left,
-            style: TextStyle(color: customColor.primaryColor),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 8.0, bottom: 16.0),
-            height: 223.0,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: widgets,
-            ),
-//            child: StreamBuilder(
-//              stream: Firestore.instance.collection("barbers").snapshots(),
-//              builder: (BuildContext context,snapshot){
-////                print(snapshot.data.documents[0]['photo']);
-//                if(!snapshot.hasData)
-//                {
-//                   return CircularProgressIndicator();
-//                }
-//                  return ListView.builder(
-//                    scrollDirection: Axis.horizontal,
-//                    itemBuilder: (_, int i) {
-//                      print("HI>>"+i.toString());
-//                      print(snapshot.data.documents[i]['photoUrl'].toString());
-//                      return Catalogue(name: snapshot.data.documents[i]['name'],
-//                        photoUrl: snapshot.data.documents[i]['photo'],);
-//                    },
-//                    itemCount: snapshot.data.documents.length,
-//                  );
-//
-//              }
-//
-//            ),
-          ),
-          Text(
-            "Beard",
-            textAlign: TextAlign.left,
-            style: TextStyle(color: customColor.primaryColor),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 8.0, bottom: 16.0),
-            height: 223.0,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: widgets,
-            ),
-//            child: StreamBuilder(
-////              initialData: widgets,
-//                stream: Firestore.instance.collection("barbers").snapshots(),
-//                builder: (BuildContext context,snapshot){
-////                print(snapshot.data.documents[0]['photo']);
-//                  if(!snapshot.hasData)
-//                  {
-//                    return CircularProgressIndicator();
-//                  }
-//                  print(snapshot.data.documents.length);
-//                  return ListView.builder(
-//
-//                    scrollDirection: Axis.horizontal,
-//                    itemBuilder: (context, int i) {
-//                      print("HI>>"+i.toString());
-//                      return Catalogue(name: snapshot.data.documents[i]['name'],
-//                        photoUrl: snapshot.data.documents[i]['photo'],);
-//                    },
-//                    itemCount: snapshot.data.documents.length,
-//                  );
-//
-//                }
-//          ),
-          )
-        ],
-      ),
-    );
-  }
-}
+//   HaircutListMenu({this.user, Key key}):super(key:key);
 
+//   @override
+//   _HaircutListMenuState createState() => _HaircutListMenuState();
+// }
 
+// class _HaircutListMenuState extends State<HaircutListMenu> {
+//   int count =1;
+// //  List<int> _list = [0];
+// //  List<int> get list => _list;
+//   @override
+//   Widget build(BuildContext context) {
+//     CustomColors customColor = CustomColors();
+//     List<Widget> widgets = List<Widget>();
+//     for (var i = 0; i < 10; i++) {
+//       widgets.add(catalogue(context, "Style", null));
+//     }
+
+//     return Container(
+//       margin: EdgeInsets.only(top: 10.0, left: 15.0),
+//       child: Column(
+//         children: <Widget>[
+//           Text(
+//             "Haircuts",
+//             textAlign: TextAlign.left,
+//             style: TextStyle(color: customColor.primaryColor),
+//           ),
+//           Container(
+//             margin: EdgeInsets.only(top: 8.0, bottom: 16.0),
+//             height: 223.0,
+//             child: ListView(
+//               scrollDirection: Axis.horizontal,
+//               children: widgets,
+//             ),
+// //            child: StreamBuilder(
+// //              stream: Firestore.instance.collection("barbers").snapshots(),
+// //              builder: (BuildContext context,snapshot){
+// //               print(snapshot.data.documents[0]['photo']);
+// //                if(!snapshot.hasData)
+// //                {
+// //                   return CircularProgressIndicator();
+// //                }
+// //                  return ListView.builder(
+// //                    scrollDirection: Axis.horizontal,
+// //                    itemBuilder: (_, int i) {
+// //                      print("HI>>"+i.toString());
+// //                      print(snapshot.data.documents[i]['photoUrl'].toString());
+// //                      return Catalogue(name: snapshot.data.documents[i]['name'],
+// //                        photoUrl: snapshot.data.documents[i]['photo'],);
+// //                    },
+// //                    itemCount: snapshot.data.documents.length,
+// //                  );
+// //
+// //              }
+// //
+// //            ),
+//           ),
+//           Text(
+//             "Beard",
+//             textAlign: TextAlign.left,
+//             style: TextStyle(color: customColor.primaryColor),
+//           ),
+//           Container(
+//             margin: EdgeInsets.only(top: 8.0, bottom: 16.0),
+//             height: 223.0,
+//             child: ListView(
+//               scrollDirection: Axis.horizontal,
+//               children: widgets,
+//             ),
+// //            child: StreamBuilder(
+// //              initialData: widgets,
+// //                stream: Firestore.instance.collection("barbers").snapshots(),
+// //                builder: (BuildContext context,snapshot){
+// //                print(snapshot.data.documents[0]['photo']);
+// //                  if(!snapshot.hasData)
+// //                  {
+// //                    return CircularProgressIndicator();
+// //                  }
+// //                  print(snapshot.data.documents.length);
+// //                  return ListView.builder(
+// //
+// //                    scrollDirection: Axis.horizontal,
+// //                    itemBuilder: (context, int i) {
+// //                      print("HI>>"+i.toString());
+// //                      return Catalogue(name: snapshot.data.documents[i]['name'],
+// //                        photoUrl: snapshot.data.documents[i]['photo'],);
+// //                    },
+// //                    itemCount: snapshot.data.documents.length,
+// //                  );
+// //
+// //                }
+// //          ),
+//           )
+//         ],
+//       ),
+//     );
+//   }
+
+//   final CustomColors customColors = new CustomColors();
+
+//   Widget catalogue(BuildContext context, String name, String photoUrl)=> InkWell(
+//       onTap: (){
+//         Navigator.push(
+//           context,
+//           MaterialPageRoute(
+//               builder: (context) => Booking()),
+//         );
+//       },
+
+//       child: Padding(
+//         padding: const EdgeInsets.only(bottom:2.0),
+//         child: Card(
+//           margin: EdgeInsets.only(right: 8.0),
+//           child: Column(
+//             children: <Widget>[
+//               photoUrl==null?Image.asset("images/haircut.jpg",width: 150.0,height:150.0,fit: BoxFit.fill,)
+//             :Image.network(photoUrl,width: 150.0,height:150.0,fit: BoxFit.fill,),
+//             Text(name,style: TextStyle(color: customColors.accentColor,fontSize: 20.0,),),
+
+//               Row(
+//                 mainAxisAlignment: MainAxisAlignment.start,
+//                 children: <Widget>[
+//                   Text("\$10",style: TextStyle(color: customColors.primaryTextColor),),
+//                   SizedBox(width: 14.0,),
+//                   IconButton(icon: Icon(Icons.add_shopping_cart), onPressed: (){
+//                      setState(() {
+//                      count++;
+//                      listnew.add(count);
+//                      });
+
+//                   }),
+//                 ],
+//               ),
+
+//             ],
+//           ),
+// //          elevation: 2.0,
+//         ),
+//       ),
+//     );
+// }
