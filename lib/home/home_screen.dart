@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:salon_app_new/home/catalogue.dart';
 import 'package:salon_app_new/util/custom_colors.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -49,12 +48,7 @@ class HomeScreenState extends State<HomeScreen> {
                   width: 30.0,
                   child: new GestureDetector(
                     onTap: () {
-                      // Navigator.of(context).push(
-                      //     // new MaterialPageRoute(
-                      //     //     builder:(BuildContext context) =>
-                      //     //     new CartItemsScreen()
-                      //     )
-                      // );
+                     // Integrate cart page
                     },
                     child: new Stack(
                       children: <Widget>[
@@ -118,26 +112,6 @@ class HomeScreenState extends State<HomeScreen> {
             children: <Widget>[
               Column(
                 children: <Widget>[
-//                  Container(
-//                    width: 1000,
-//                    margin: EdgeInsets.all(10.0),
-//                 child: Image.asset(
-//                     "images/profile_overview.png",
-//                      fit: BoxFit.fill,
-//                    ),
-//                    child: Card(
-//                      color: customColor.primaryColor,
-//                      child: Container(
-//                        width: 1000,
-//                        height: 180,
-//                        child: Center(
-//                            child: Text(
-//                          "Hello, ${widget.user.displayName}",
-//                          style: TextStyle(color: Colors.white, fontSize: 30.0),
-//                        )),
-//                      ),
-//                    ),
-//                  ),
                   DashBoard(
                     user: widget.user,
                   ),
@@ -324,148 +298,3 @@ class LastVisitCard extends StatelessWidget {
         ));
   }
 }
-
-// class HaircutListMenu extends StatefulWidget {
-//   final FirebaseUser user;
-
-//   HaircutListMenu({this.user, Key key}):super(key:key);
-
-//   @override
-//   _HaircutListMenuState createState() => _HaircutListMenuState();
-// }
-
-// class _HaircutListMenuState extends State<HaircutListMenu> {
-//   int count =1;
-// //  List<int> _list = [0];
-// //  List<int> get list => _list;
-//   @override
-//   Widget build(BuildContext context) {
-//     CustomColors customColor = CustomColors();
-//     List<Widget> widgets = List<Widget>();
-//     for (var i = 0; i < 10; i++) {
-//       widgets.add(catalogue(context, "Style", null));
-//     }
-
-//     return Container(
-//       margin: EdgeInsets.only(top: 10.0, left: 15.0),
-//       child: Column(
-//         children: <Widget>[
-//           Text(
-//             "Haircuts",
-//             textAlign: TextAlign.left,
-//             style: TextStyle(color: customColor.primaryColor),
-//           ),
-//           Container(
-//             margin: EdgeInsets.only(top: 8.0, bottom: 16.0),
-//             height: 223.0,
-//             child: ListView(
-//               scrollDirection: Axis.horizontal,
-//               children: widgets,
-//             ),
-// //            child: StreamBuilder(
-// //              stream: Firestore.instance.collection("barbers").snapshots(),
-// //              builder: (BuildContext context,snapshot){
-// //               print(snapshot.data.documents[0]['photo']);
-// //                if(!snapshot.hasData)
-// //                {
-// //                   return CircularProgressIndicator();
-// //                }
-// //                  return ListView.builder(
-// //                    scrollDirection: Axis.horizontal,
-// //                    itemBuilder: (_, int i) {
-// //                      print("HI>>"+i.toString());
-// //                      print(snapshot.data.documents[i]['photoUrl'].toString());
-// //                      return Catalogue(name: snapshot.data.documents[i]['name'],
-// //                        photoUrl: snapshot.data.documents[i]['photo'],);
-// //                    },
-// //                    itemCount: snapshot.data.documents.length,
-// //                  );
-// //
-// //              }
-// //
-// //            ),
-//           ),
-//           Text(
-//             "Beard",
-//             textAlign: TextAlign.left,
-//             style: TextStyle(color: customColor.primaryColor),
-//           ),
-//           Container(
-//             margin: EdgeInsets.only(top: 8.0, bottom: 16.0),
-//             height: 223.0,
-//             child: ListView(
-//               scrollDirection: Axis.horizontal,
-//               children: widgets,
-//             ),
-// //            child: StreamBuilder(
-// //              initialData: widgets,
-// //                stream: Firestore.instance.collection("barbers").snapshots(),
-// //                builder: (BuildContext context,snapshot){
-// //                print(snapshot.data.documents[0]['photo']);
-// //                  if(!snapshot.hasData)
-// //                  {
-// //                    return CircularProgressIndicator();
-// //                  }
-// //                  print(snapshot.data.documents.length);
-// //                  return ListView.builder(
-// //
-// //                    scrollDirection: Axis.horizontal,
-// //                    itemBuilder: (context, int i) {
-// //                      print("HI>>"+i.toString());
-// //                      return Catalogue(name: snapshot.data.documents[i]['name'],
-// //                        photoUrl: snapshot.data.documents[i]['photo'],);
-// //                    },
-// //                    itemCount: snapshot.data.documents.length,
-// //                  );
-// //
-// //                }
-// //          ),
-//           )
-//         ],
-//       ),
-//     );
-//   }
-
-//   final CustomColors customColors = new CustomColors();
-
-//   Widget catalogue(BuildContext context, String name, String photoUrl)=> InkWell(
-//       onTap: (){
-//         Navigator.push(
-//           context,
-//           MaterialPageRoute(
-//               builder: (context) => Booking()),
-//         );
-//       },
-
-//       child: Padding(
-//         padding: const EdgeInsets.only(bottom:2.0),
-//         child: Card(
-//           margin: EdgeInsets.only(right: 8.0),
-//           child: Column(
-//             children: <Widget>[
-//               photoUrl==null?Image.asset("images/haircut.jpg",width: 150.0,height:150.0,fit: BoxFit.fill,)
-//             :Image.network(photoUrl,width: 150.0,height:150.0,fit: BoxFit.fill,),
-//             Text(name,style: TextStyle(color: customColors.accentColor,fontSize: 20.0,),),
-
-//               Row(
-//                 mainAxisAlignment: MainAxisAlignment.start,
-//                 children: <Widget>[
-//                   Text("\$10",style: TextStyle(color: customColors.primaryTextColor),),
-//                   SizedBox(width: 14.0,),
-//                   IconButton(icon: Icon(Icons.add_shopping_cart), onPressed: (){
-//                      setState(() {
-//                      count++;
-//                      listnew.add(count);
-//                      });
-
-//                   }),
-//                 ],
-//               ),
-
-//             ],
-//           ),
-// //          elevation: 2.0,
-//         ),
-//       ),
-//     );
-// }
