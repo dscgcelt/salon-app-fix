@@ -78,11 +78,11 @@ class CatalogueState extends State<Catalogue> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Text("\$10",style: TextStyle(color: customColors.primaryTextColor),),
-                  SizedBox(width: 14.0,),
+                  SizedBox(width: 20.0,),
 
-                  IconButton(icon: Icon(Icons.add_shopping_cart), onPressed: (){
-
-                  }),
+//                  IconButton(icon: Icon(Icons.add_shopping_cart), onPressed: (){
+//
+//                  }),
 
                   saved.contains(widget.name)?IconButton(icon: Icon(Icons.add_shopping_cart,color:Colors.green), onPressed: () {
                     streamCntrl.sink.add(--counter);
