@@ -10,7 +10,8 @@ class BarberCatalogue extends StatefulWidget {
   final String photoUrl;
   final String name;
   final int rating;
-  BarberCatalogue({this.name,this.photoUrl,this.rating});
+  List<String> skills = <String>[];
+  BarberCatalogue({this.name,this.photoUrl,this.rating,this.skills});
 
   @override
   _BarberCatalogueState createState() => _BarberCatalogueState();
@@ -63,7 +64,6 @@ class _BarberCatalogueState extends State<BarberCatalogue> {
 //                  IconButton(icon: Icon(Icons.add_shopping_cart), onPressed: null),
 //                ],
 //              ),
-
             ],
           ),
 //          elevation: 2.0,

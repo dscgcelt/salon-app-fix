@@ -2,12 +2,55 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:salon_app_new/detail/booking.dart';
 import 'package:salon_app_new/util/custom_colors.dart';
+import 'package:salon_app_new/util/counter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Catalogue extends StatefulWidget {
-//  final FirebaseUser user;
+
+  final FirebaseUser user;
   final String photoUrl;
   final String name;
-  Catalogue({this.name,this.photoUrl});
+  final String price;
+  Catalogue({this.name,this.photoUrl,this.user,this.price});
+
+  @override
+  CatalogueState createState() {
+    return new CatalogueState();
+  }
+}
+
+class CatalogueState extends State<Catalogue> {
+  int c = 0 ;
+  //  Set<String> _saved = Set<String>();
+  _saveItem(String name,String price){
+//    streamCntrl.sink.add(++counter);
+      Firestore.instance.collection("users").document(widget.user.email).
+            collection("cart").document(name).setData(
+              {
+                "name": name.toString(),
+                "photo": widget.photoUrl,
+                "price": widget.price,
+              }
+      );
+
+    setState(() {
+//      ++counter;
+      saved.add(name);
+      bookings.addAll({name:price});
+    });
+  }
+
+  _discardItem(String value){
+
+    Firestore.instance.collection("users").document(widget.user.email).
+    collection("cart").document(value).delete();
+
+    setState(() {
+//      streamCntrl.sink.add(--counter);
+//      --counter;
+      saved.remove(value);
+    });
+  }
 
   @override
   _CatalogueState createState() => _CatalogueState();
@@ -23,7 +66,7 @@ class _CatalogueState extends State<Catalogue> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => Booking()),
+              builder: (context) => Booking(user: widget.user,name: widget.name,photoUrl: widget.photoUrl,price: widget.price,)),
         );
       },
 
@@ -42,9 +85,25 @@ class _CatalogueState extends State<Catalogue> {
                 children: <Widget>[
                   Text("\$10",style: TextStyle(color: customColors.primaryTextColor),),
                   SizedBox(width: 14.0,),
+
                   IconButton(icon: Icon(Icons.add_shopping_cart), onPressed: (){
 
                   }),
+
+                  saved.contains(widget.name)?IconButton(icon: Icon(Icons.add_shopping_cart,color:Colors.green), onPressed: () {
+                    streamCntrl.sink.add(--counter);
+                    _discardItem(widget.name);
+                    print(saved.toString());
+                    print(counter);
+                  },
+                  ):IconButton(icon: Icon(Icons.add_shopping_cart,color: Colors.grey,), onPressed: () {
+                    streamCntrl.sink.add(++counter);
+                    _saveItem(widget.name,widget.price);
+                    print(saved.toString());
+                    print(counter);
+                  },
+                  ),
+
                 ],
               ),
 

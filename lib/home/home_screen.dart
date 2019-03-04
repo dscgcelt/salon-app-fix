@@ -5,7 +5,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:salon_app_new/onboarding/pages/login_page.dart';
 import 'package:salon_app_new/home/dashboard.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:salon_app_new/detail/booking.dart';
+
+import 'package:salon_app_new/util/counter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:salon_app_new/detail/cart.dart';
+
 
 class HomeScreen extends StatefulWidget {
   final FirebaseUser user;
@@ -27,6 +33,9 @@ class HomeScreenState extends State<HomeScreen> {
   List<int> listnew = [];
 
   GoogleSignIn googleSignIn = GoogleSignIn();
+
+
+
   @override
   Widget build(BuildContext context) {
     CustomColors customColor = CustomColors();
@@ -84,6 +93,67 @@ class HomeScreenState extends State<HomeScreen> {
                     ),
                   )),
             ),
+               IconButton(
+                 onPressed: ()=> Navigator.push(
+                   context,
+                   MaterialPageRoute(builder: (context)=>CartDetails(user: widget.user,))
+                 ),
+                 icon: Stack(
+                  children: <Widget>[
+                    Positioned(
+                      top: 10.0,
+                      child: Icon(
+                        Icons.shopping_cart,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 8.0,
+                      child: Container(
+                        margin: EdgeInsets.only(bottom:4.0) ,
+                        padding: EdgeInsets.all(1.0),
+                        height: 14.0,
+                        width: 14.0,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.red,
+                        ),
+//                      constraints: BoxConstraints(
+//                        minWidth: 4.0,
+//                        minHeight: 4.0,
+//                      ),
+//                        child: Center(
+//                          child: Text(
+//                            "$counter",
+//                            style: TextStyle(
+//                             color: Colors.white,
+//                             fontSize: 10.0,
+//                              fontWeight: FontWeight.bold,
+//                            ),
+//                          ),
+//                        ) ,
+                      child:StreamBuilder<int>(
+                        stream: streamCntrl.stream,
+                        initialData: counter,
+                        builder: (BuildContext context,AsyncSnapshot<int>snapshot){
+                          print(snapshot.data);
+                          return Center(
+                          child: Text(
+                            snapshot.data.toString(),
+                            style: TextStyle(
+                             color: Colors.white,
+                             fontSize: 10.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        );
+                        },
+                      )
+                      ),
+                    ),
+                  ],
+              ),
+                ),
             PopupMenuButton<Choice>(
               elevation: 3.2,
               onSelected: _handleChoiceSelect,

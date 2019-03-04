@@ -9,6 +9,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:salon_app_new/home/home_screen.dart';
+import 'package:salon_app_new/util/counter.dart';
 
 
 class OnBoardingApp extends StatefulWidget {
@@ -25,7 +26,7 @@ class OnBoardingAppState extends State<OnBoardingApp> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    counter;
     Future.delayed(Duration.zero,(){
       _signinHome();
     });
