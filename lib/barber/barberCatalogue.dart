@@ -14,22 +14,26 @@ class BarberCatalogue extends StatefulWidget {
   BarberCatalogue({this.name,this.photoUrl,this.rating,this.skills});
 
   @override
-  _BarberCatalogueState createState() => _BarberCatalogueState();
+  BarberCatalogueState createState() {
+    return new BarberCatalogueState();
+  }
 }
 
-class _BarberCatalogueState extends State<BarberCatalogue> {
+class BarberCatalogueState extends State<BarberCatalogue> {
   Color selcolor = Colors.white;
+
   bool isSelected = false;
+
   void togglecolor(){
-     setState(() {
-       if(isSelected){
-      selcolor = Colors.purpleAccent;
-      isSelected=false;
-       }else{
-          selcolor = Colors.white;
-          isSelected = true;
-       }
-     });
+    setState(() {
+      if(isSelected){
+        selcolor = Colors.purpleAccent;
+        isSelected=false;
+      }else{
+        selcolor = Colors.white;
+        isSelected = true;
+      }
+    });
   }
 
   @override
@@ -43,19 +47,22 @@ class _BarberCatalogueState extends State<BarberCatalogue> {
               builder: (context) => BarberProfile(name: widget.name, picurl: widget.photoUrl, rating: widget.rating,)),
         );
       },
+
       onLongPress: togglecolor,
 
-      child: Padding(
-        padding: const EdgeInsets.only(bottom:2.0),
-        child: Card(
-          color: selcolor,
-          margin: EdgeInsets.only(right: 8.0),
-          child: Column(
-            children: <Widget>[
-              widget.photoUrl==null?Image.asset("images/haircut.jpg",width: 150.0,height:150.0,fit: BoxFit.fill,)
-                  :Image.network(widget.photoUrl,width: 150.0,height:150.0,fit: BoxFit.fill,),
-              Text(widget.name,style: TextStyle(color: customColors.accentColor,fontSize: 20.0,),),
-              Text("Rating: "+widget.rating.toString(),style: TextStyle(color: customColors.accentColor,fontSize: 20.0,),),
+      child: Container(
+        margin: EdgeInsets.only(right: 8.0),
+        color: selcolor,
+        child: Padding(
+          padding: const EdgeInsets.only(bottom:2.0),
+          child: Card(
+//            margin: EdgeInsets.only(right: 8.0),
+            child: Column(
+              children: <Widget>[
+                widget.photoUrl==null?Image.asset("images/haircut.jpg",width: 150.0,height:150.0,fit: BoxFit.fill,)
+                    :Image.network(widget.photoUrl,width: 150.0,height:150.0,fit: BoxFit.fill,),
+                Text(widget.name,style: TextStyle(color: customColors.accentColor,fontSize: 20.0,),),
+                Text("Rating: "+widget.rating.toString(),style: TextStyle(color: customColors.accentColor,fontSize: 20.0,),),
 //              Row(
 //                mainAxisAlignment: MainAxisAlignment.start,
 //                children: <Widget>[
@@ -64,9 +71,10 @@ class _BarberCatalogueState extends State<BarberCatalogue> {
 //                  IconButton(icon: Icon(Icons.add_shopping_cart), onPressed: null),
 //                ],
 //              ),
-            ],
-          ),
+              ],
+            ),
 //          elevation: 2.0,
+          ),
         ),
       ),
     );

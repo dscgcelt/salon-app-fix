@@ -26,8 +26,9 @@ class OnBoardingAppState extends State<OnBoardingApp> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    counter;
+//    counter;
     Future.delayed(Duration.zero,(){
+//      _waitingScreen();
       _signinHome();
     });
 
@@ -84,7 +85,9 @@ class OnBoardingAppState extends State<OnBoardingApp> {
   void _signinHome() async{
     GoogleSignInAuthentication googleAuth;
     bool isSignedIn = await googleSignIn.isSignedIn();
+    _waitingScreen();
     if(isSignedIn){
+      _waitingScreen();
       _googleSignInAccount = await googleSignIn.signIn();
       googleAuth = await _googleSignInAccount.authentication;
       _user = await firebaseAuth.signInWithGoogle(
@@ -100,6 +103,16 @@ class OnBoardingAppState extends State<OnBoardingApp> {
     }else{
       return;
     }
+  }
+
+  Widget _waitingScreen(){
+    return Scaffold(
+      body: Container(
+        child: Center(
+          child: Text("Loging...",style: TextStyle(fontSize: 18.0),),
+        ),
+      ),
+    );
   }
 
 }

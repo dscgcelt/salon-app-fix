@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:salon_app_new/home/catalogue.dart';
 import 'package:salon_app_new/util/custom_colors.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:salon_app_new/onboarding/pages/login_page.dart';
 import 'package:salon_app_new/home/dashboard.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
-import 'package:salon_app_new/detail/booking.dart';
-
 import 'package:salon_app_new/util/counter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:salon_app_new/detail/cart.dart';
 
-
 class HomeScreen extends StatefulWidget {
   final FirebaseUser user;
-
   HomeScreen({this.user});
   @override
   HomeScreenState createState() {
@@ -29,9 +25,6 @@ class HomeScreenState extends State<HomeScreen> {
     Choice(icon: Icons.exit_to_app, title: "Log Out"),
   ];
 
-  int count = 0;
-  List<int> listnew = [];
-
   GoogleSignIn googleSignIn = GoogleSignIn();
 
 
@@ -39,10 +32,6 @@ class HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     CustomColors customColor = CustomColors();
-    List<Widget> widgets = List<Widget>();
-    for (var i = 0; i < 10; i++) {
-      widgets.add(catalogue(context, "Style", null));
-    }
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -50,66 +39,23 @@ class HomeScreenState extends State<HomeScreen> {
           title: Text("Cut & Trim"),
           backgroundColor: customColor.primaryColor,
           actions: <Widget>[
-            new Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: new Container(
-                  height: 150.0,
-                  width: 30.0,
-                  child: new GestureDetector(
-                    onTap: () {
-                     // Integrate cart page
-                    },
-                    child: new Stack(
-                      children: <Widget>[
-                        new IconButton(
-                          icon: new Icon(
-                            Icons.shopping_cart,
-                            color: Colors.white,
-                          ),
-                          onPressed: null,
-                        ),
-                        listnew.length == 0
-                            ? new Container()
-                            : new Positioned(
-                                child: new Stack(
-                                children: <Widget>[
-                                  new Icon(Icons.brightness_1,
-                                      size: 20.0, color: Colors.green[800]),
-                                  new Positioned(
-                                      top: 3.0,
-                                      right: 4.0,
-                                      child: new Center(
-                                        child: new Text(
-                                          listnew.length.toString(),
-                                          style: new TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 11.0,
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                      )),
-                                ],
-                              )),
-                      ],
+            IconButton(
+              onPressed: ()=> Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context)=>CartDetails(user: widget.user,))
+              ),
+              icon: Stack(
+                children: <Widget>[
+                  Positioned(
+                    top: 10.0,
+                    child: Icon(
+                      Icons.shopping_cart,
+                      color: Colors.white,
                     ),
-                  )),
-            ),
-               IconButton(
-                 onPressed: ()=> Navigator.push(
-                   context,
-                   MaterialPageRoute(builder: (context)=>CartDetails(user: widget.user,))
-                 ),
-                 icon: Stack(
-                  children: <Widget>[
-                    Positioned(
-                      top: 10.0,
-                      child: Icon(
-                        Icons.shopping_cart,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 8.0,
-                      child: Container(
+                  ),
+                  Positioned(
+                    bottom: 8.0,
+                    child: Container(
                         margin: EdgeInsets.only(bottom:4.0) ,
                         padding: EdgeInsets.all(1.0),
                         height: 14.0,
@@ -132,28 +78,41 @@ class HomeScreenState extends State<HomeScreen> {
 //                            ),
 //                          ),
 //                        ) ,
-                      child:StreamBuilder<int>(
-                        stream: streamCntrl.stream,
-                        initialData: counter,
-                        builder: (BuildContext context,AsyncSnapshot<int>snapshot){
-                          print(snapshot.data);
-                          return Center(
-                          child: Text(
-                            snapshot.data.toString(),
-                            style: TextStyle(
-                             color: Colors.white,
-                             fontSize: 10.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        );
-                        },
-                      )
-                      ),
+                        child:StreamBuilder<int>(
+                          stream: streamCntrl.stream,
+                          initialData: counter,
+                          builder: (BuildContext context,AsyncSnapshot<int>snapshot){
+                            if(!snapshot.hasData){
+                              return Center(
+                                child: Text(
+                                  "0",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              );
+                            }
+                            print(snapshot.data);
+                            return Center(
+                              child: Text(
+                                snapshot.data.toString(),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            );
+                          },
+                        )
                     ),
-                  ],
+                  ),
+                ],
               ),
-                ),
+            ),
+
             PopupMenuButton<Choice>(
               elevation: 3.2,
               onSelected: _handleChoiceSelect,
@@ -182,44 +141,29 @@ class HomeScreenState extends State<HomeScreen> {
             children: <Widget>[
               Column(
                 children: <Widget>[
-                  DashBoard(
-                    user: widget.user,
-                  ),
+//                  Container(
+//                    width: 1000,
+//                    margin: EdgeInsets.all(10.0),
+//                 child: Image.asset(
+//                     "images/profile_overview.png",
+//                      fit: BoxFit.fill,
+//                    ),
+//                    child: Card(
+//                      color: customColor.primaryColor,
+//                      child: Container(
+//                        width: 1000,
+//                        height: 180,
+//                        child: Center(
+//                            child: Text(
+//                          "Hello, ${widget.user.displayName}",
+//                          style: TextStyle(color: Colors.white, fontSize: 30.0),
+//                        )),
+//                      ),
+//                    ),
+//                  ),
+                  DashBoard(user: widget.user,),
                   LastVisitCard(),
-                  // HaircutListMenu(user: widget.user,key:key),
-                  Container(
-                    margin: EdgeInsets.only(top: 10.0, left: 15.0),
-                    child: Column(
-                      children: <Widget>[
-                        Text(
-                          "Haircuts",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(color: customColor.primaryColor),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(top: 8.0, bottom: 16.0),
-                          height: 223.0,
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: widgets,
-                          ),
-                        ),
-                        Text(
-                          "Beard",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(color: customColor.primaryColor),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(top: 8.0, bottom: 16.0),
-                          height: 223.0,
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: widgets,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
+                  HaircutListMenu(user: widget.user,),
                 ],
               )
             ],
@@ -228,69 +172,6 @@ class HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
-  final CustomColors customColors = new CustomColors();
-
-  Widget catalogue(BuildContext context, String name, String photoUrl) =>
-      InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => Booking()),
-          );
-        },
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 2.0),
-          child: Card(
-            margin: EdgeInsets.only(right: 8.0),
-            child: Column(
-              children: <Widget>[
-                photoUrl == null
-                    ? Image.asset(
-                        "images/haircut.jpg",
-                        width: 150.0,
-                        height: 150.0,
-                        fit: BoxFit.fill,
-                      )
-                    : Image.network(
-                        photoUrl,
-                        width: 150.0,
-                        height: 150.0,
-                        fit: BoxFit.fill,
-                      ),
-                Text(
-                  name,
-                  style: TextStyle(
-                    color: customColors.accentColor,
-                    fontSize: 20.0,
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      "\$10",
-                      style: TextStyle(color: customColors.primaryTextColor),
-                    ),
-                    SizedBox(
-                      width: 14.0,
-                    ),
-                    IconButton(
-                        icon: Icon(Icons.add_shopping_cart),
-                        onPressed: () {
-                          setState(() {
-                            count++;
-                            listnew.add(count);
-                          });
-                        }),
-                  ],
-                ),
-              ],
-            ),
-//          elevation: 2.0,
-          ),
-        ),
-      );
 
   void _handleSignOut(BuildContext context) async {
     FirebaseAuth.instance.signOut().then((value) {
@@ -317,6 +198,7 @@ class HomeScreenState extends State<HomeScreen> {
       googleSignIn.disconnect();
     }
   }
+
 }
 
 class Choice {
@@ -339,18 +221,18 @@ class LastVisitCard extends StatelessWidget {
           children: <Widget>[
             Expanded(
                 child: Column(
-              children: <Widget>[
-                Text(
-                  "Last Visit",
-                  style: TextStyle(
-                      color: customColor.primaryColor, fontSize: 30.0),
-                ),
-                Text(
-                  "3 months ago",
-                  style: TextStyle(color: customColor.primaryTextColor),
-                )
-              ],
-            )),
+                  children: <Widget>[
+                    Text(
+                      "Last Visit",
+                      style: TextStyle(
+                          color: customColor.primaryColor, fontSize: 30.0),
+                    ),
+                    Text(
+                      "3 months ago",
+                      style: TextStyle(color: customColor.primaryTextColor),
+                    )
+                  ],
+                )),
             RaisedButton(
               onPressed: () {},
               color: customColor.primaryColor,
@@ -368,3 +250,103 @@ class LastVisitCard extends StatelessWidget {
         ));
   }
 }
+
+class HaircutListMenu extends StatelessWidget {
+  final FirebaseUser user;
+
+  HaircutListMenu({this.user});
+  // final CustomColors customColor = CustomColors();
+
+  @override
+  Widget build(BuildContext context) {
+    CustomColors customColor = CustomColors();
+    List<Widget> widgets = List<Widget>();
+    for (var i = 0; i < 10; i++) {
+      widgets.add(Catalogue(name:"Style",user: user,));
+    }
+
+    return Container(
+      margin: EdgeInsets.only(top: 10.0, left: 15.0),
+      child: Column(
+        children: <Widget>[
+          Text(
+            "Haircuts",
+            textAlign: TextAlign.left,
+            style: TextStyle(color: customColor.primaryColor),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 8.0, bottom: 16.0),
+            height: 223.0,
+//            child: ListView(
+//              scrollDirection: Axis.horizontal,
+//              children: widgets,
+//            ),
+            child: StreamBuilder(
+                stream: Firestore.instance.collection("haircuts").snapshots(),
+                builder: (BuildContext context,snapshot){
+//                print(snapshot.data.documents[0]['photo']);
+                  if(!snapshot.hasData)
+                  {
+                    return CircularProgressIndicator();
+                  }
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (_, int i) {
+                      print("HI>>"+i.toString());
+//                      print(snapshot.data.documents[i]['photoUrl'].toString());
+                      return Catalogue(name: snapshot.data.documents[i]['name'],
+                        photoUrl: snapshot.data.documents[i]['photo'],
+                        user: user,);
+                    },
+                    itemCount: snapshot.data.documents.length,
+                  );
+
+                }
+
+            ),
+          ),
+          Text(
+            "Beard",
+            textAlign: TextAlign.left,
+            style: TextStyle(color: customColor.primaryColor),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 8.0, bottom: 16.0),
+            height: 223.0,
+//            child: ListView(
+//              scrollDirection: Axis.horizontal,
+//              children: widgets,
+//            ),
+            child: StreamBuilder(
+//              initialData: widgets,
+                stream: Firestore.instance.collection("beard").snapshots(),
+                builder: (BuildContext context,snapshot){
+//                print(snapshot.data.documents[0]['photo']);
+                  if(!snapshot.hasData)
+                  {
+                    return CircularProgressIndicator();
+                  }
+                  print(snapshot.data.documents.length);
+                  return ListView.builder(
+
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, int i) {
+                      print("HI>>"+i.toString());
+                      return Catalogue(name: snapshot.data.documents[i]['name'],
+                        photoUrl: snapshot.data.documents[i]['photo'],
+                        user: user,);
+                    },
+                    itemCount: snapshot.data.documents.length,
+                  );
+
+                }
+//          ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+

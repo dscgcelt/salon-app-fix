@@ -32,15 +32,11 @@ class _CartItemState extends State<CartItem> {
         child: Container(
           height: 100.0,
           child: Center(
-            heightFactor: 1.0,
             child: ListTile(
-                leading: Padding(
-                  padding: const EdgeInsets.only(bottom: 5.0),
-                  child: Image.network(
-                    widget.photoUrl,
-                    width: 80.0,
-                    height: 80.0,
-                  ),
+                leading: Image.network(
+                  widget.photoUrl,
+                  width: 80.0,
+                  height: 80.0,
                 ),
                 title: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,7 +53,7 @@ class _CartItemState extends State<CartItem> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        widget.price.toString() + '\$',
+                        widget.price+'\$',
                         style: TextStyle(
                             fontSize: 18.0, fontWeight: FontWeight.normal),
                       ),

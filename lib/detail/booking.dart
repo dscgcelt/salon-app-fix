@@ -13,8 +13,7 @@ class Booking extends StatefulWidget {
   final FirebaseUser user;
   final String name;
   final String photoUrl;
-  final String price;
-  Booking({this.user,this.name,this.photoUrl,this.price});
+  Booking({this.user,this.name,this.photoUrl});
   
   @override
   _BookingState createState() => _BookingState();
@@ -60,7 +59,7 @@ class _BookingState extends State<Booking> {
   Widget build(BuildContext context) {
     CustomColors customColors = CustomColors();
 //    CollectionReference collectionReference = Firestore.instance.collection("users");
-//    List<Widget> widgets = List<Widget>();
+    List<Widget> widgets = List<Widget>();
 //    for (var i = 0; i < 9; i++) {
 //      widgets.add(Catalogue());
 //    }
@@ -198,7 +197,16 @@ class _BookingState extends State<Booking> {
 
 
                 RaisedButton(onPressed: (){
-                  _handleBooking();
+                  print(widget.user.email);
+                  Firestore.instance.collection('users').document(widget.user.email)
+                  .collection("bookings").document(selectedDate.toIso8601String()+selectedTime.toString()).
+                  setData
+                  ({
+                    'date' : selectedDate.toString(),
+                    'time' : selectedTime.toString(),
+                  });
+                  Fluttertoast.showToast(msg: "Booked ${widget.user.uid}", toastLength: Toast.LENGTH_SHORT);
+                 Navigator.pop(context);
                 },
                 child: Text("Book your date"),)
               ],
@@ -208,19 +216,4 @@ class _BookingState extends State<Booking> {
       ),
     );
   }
-
-  _handleBooking(){
-    print(widget.user.email);
-    Firestore.instance.collection('users').document(widget.user.email)
-        .collection("bookings").document(_dateFormat.format(selectedDate).toString()+selectedTime.toString()).
-    setData
-      ({
-      'date' : _dateFormat.format(selectedDate).toString(),
-      'time' : selectedTime.toString(),
-      'booking':{widget.name:widget.price},
-    });
-    Fluttertoast.showToast(msg: "Booked ${widget.user.uid}", toastLength: Toast.LENGTH_SHORT);
-    Navigator.pop(context);
-  }
-
 }

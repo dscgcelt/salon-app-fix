@@ -10,8 +10,8 @@ class Catalogue extends StatefulWidget {
   final FirebaseUser user;
   final String photoUrl;
   final String name;
-  final String price;
-  Catalogue({this.name,this.photoUrl,this.user,this.price});
+
+  Catalogue({this.name,this.photoUrl,this.user});
 
   @override
   CatalogueState createState() {
@@ -19,24 +19,23 @@ class Catalogue extends StatefulWidget {
   }
 }
 
+
 class CatalogueState extends State<Catalogue> {
-  int c = 0 ;
-  //  Set<String> _saved = Set<String>();
-  _saveItem(String name,String price){
+
+  _saveItem(String value){
 //    streamCntrl.sink.add(++counter);
-      Firestore.instance.collection("users").document(widget.user.email).
-            collection("cart").document(name).setData(
-              {
-                "name": name.toString(),
-                "photo": widget.photoUrl,
-                "price": widget.price,
-              }
-      );
+    Firestore.instance.collection("users").document(widget.user.email).
+    collection("cart").document(value).setData(
+        {
+          "name": value.toString(),
+          "photo": widget.photoUrl,
+          "price": "10",
+        }
+    );
 
     setState(() {
 //      ++counter;
-      saved.add(name);
-      bookings.addAll({name:price});
+      saved.add(value);
     });
   }
 
@@ -52,11 +51,6 @@ class CatalogueState extends State<Catalogue> {
     });
   }
 
-  @override
-  _CatalogueState createState() => _CatalogueState();
-}
-
-class _CatalogueState extends State<Catalogue> {
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +60,7 @@ class _CatalogueState extends State<Catalogue> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => Booking(user: widget.user,name: widget.name,photoUrl: widget.photoUrl,price: widget.price,)),
+              builder: (context) => Booking(user: widget.user,name: widget.name,photoUrl: widget.photoUrl,)),
         );
       },
 
@@ -84,11 +78,11 @@ class _CatalogueState extends State<Catalogue> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Text("\$10",style: TextStyle(color: customColors.primaryTextColor),),
-                  SizedBox(width: 14.0,),
+                  SizedBox(width: 20.0,),
 
-                  IconButton(icon: Icon(Icons.add_shopping_cart), onPressed: (){
-
-                  }),
+//                  IconButton(icon: Icon(Icons.add_shopping_cart), onPressed: (){
+//
+//                  }),
 
                   saved.contains(widget.name)?IconButton(icon: Icon(Icons.add_shopping_cart,color:Colors.green), onPressed: () {
                     streamCntrl.sink.add(--counter);
@@ -98,7 +92,7 @@ class _CatalogueState extends State<Catalogue> {
                   },
                   ):IconButton(icon: Icon(Icons.add_shopping_cart,color: Colors.grey,), onPressed: () {
                     streamCntrl.sink.add(++counter);
-                    _saveItem(widget.name,widget.price);
+                    _saveItem(widget.name);
                     print(saved.toString());
                     print(counter);
                   },

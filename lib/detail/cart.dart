@@ -8,7 +8,6 @@ import 'bookcart.dart';
 
 class CartDetails extends StatefulWidget {
   final FirebaseUser user;
-
   CartDetails({this.user});
 
   @override
@@ -59,9 +58,7 @@ class _CartDetailsState extends State<CartDetails> {
                         ),
                       ),
                       FlatButton(
-                          onPressed: ()=>Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context)=>BookCart(user: widget.user,)),
-                          ) ,
+                          onPressed: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context)=>BookCart(user: widget.user,))),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
